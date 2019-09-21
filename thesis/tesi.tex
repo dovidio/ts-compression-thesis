@@ -1,0 +1,75 @@
+%!TEX TS-program = pdflatex
+%!TEX encoding = UTF-8 Unicode
+
+\documentclass[12pt,a4paper,twoside,english, italian]{book}
+
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+\usepackage{uniudtesi}
+\usepackage{siunitx}
+\usepackage[nottoc]{tocbibind}
+\usepackage{indentfirst}
+\usepackage{emptypage}
+\graphicspath{{./figure/}}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{latexsym}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Complessi}{\mathbb{C}}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\fancyhf{}
+\fancyhead[LE,RO]{\bfseries\thepage}
+\fancyhead[LO]{\bfseries\rightmark}
+\fancyhead[RE]{\bfseries\leftmark}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{14.5pt}
+
+\usepackage[backend=bibtex,style=ieee]{biblatex}
+\bibliography{bibliography} 
+
+
+  \titolo{Compression algorithms \\for time series data}
+ \laureando{Umberto D'Ovidio}
+  \annoaccademico{2018-2019}
+\corsodilaureatriennalein{Tecnologie Web e Multimediali}
+  \relatore[Prof.]{Nicola Vitacolonna}
+ \begin{document}
+
+\frontmatter
+\maketitle
+
+
+\renewcommand{\theequation}{\arabic{equation}}%consigliato per migliorare i numeri di equazione nell'introduzione
+\renewcommand{\thesection}{\arabic{section}}%consigliato per migliorare i numeri di equazione nell'introduzione
+
+\tableofcontents
+
+\mainmatter
+
+\renewcommand{\theequation}{\thechapter.\arabic{equation}}%si torna alle formule numerate come da default
+\renewcommand{\thesection}{\thechapter.\arabic{section}}%si torna alle sezioni numerate come da default
+
+\selectlanguage{english}
+
+\input{chapter1}
+\input{chapter2}
+
+\appendix
+
+\printbibliography
+
+
+
+\backmatter
+
+
+
+% \printindex % se si fa l'indice analitico.
+
+\end{document}
