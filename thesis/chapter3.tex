@@ -1,0 +1,51 @@
+\chapter{Approaches to Time Series compression}
+\section{Storing aggregates}
+Storing aggregates is probably the most common approach to deal with large time series.
+The idea is to reduce the temporal resolution of data by storing aggregates of values within
+some predefined time buckets. Once values have been aggregated to a lower temporal resolution,
+they can be deleted, provided that the initial temporal resolution is not needed anymore.
+As a practical example, let us consider an application in which we record the time delays
+accumulated by trains. The following series represent the daily delay of a specific train on
+a certain day in minutes.
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{l|l|l|l|l|l|l}
+\textbf{Day 1} & \textbf{Day 2} & \textbf{Day 3} & \textbf{Day 4} & \textbf{Day 5} & \textbf{Day 6} & \textbf{Day 7} \\
+\hline
+20 & 20 & 10 & 50 & 40 & 40 & 30 \\                
+\end{tabular}
+\caption{Daily delay of a specific train of a certain day in minutes.}
+\label{tab:daily_delay}
+\end{table}
+
+After each week passes, we want to aggregate the previous week’s daily data. With reference
+to our example above, we can delete the daily values and replace them by their sum
+(210 minutes). By also storing the count, we can compute the average daily during that week
+(210 / 7 = 30 minutes).
+This technique, often called downsampling, is so simple and effective that most time series
+databases offer it out of the box. For example, OpenTSDB, an open-source time series database,
+offers the possibility to query downsampled data \cite{A2019Downsample}. This is useful when
+one wants to plot data keeping the density at a level that can be easily understandable by
+users. Admittedly, this feature does not hold any savings in terms of storage, as it is
+performed only at query time, but it is still interesting for network bound applications.
+Since version 2.4 OpenTSDB offers the possibility to store the result of the downsampler
+\cite{A2019Rollup}. In this way, when querying for a long time span, there is no need to wait for the
+downsampled data to be computed.
+InfluxDB, another popular open-source database, offers the possibility to downsample old
+data using continuous queries and retention policy \cite{A2016Downsampling}. Continuous queries
+are queries that are run automatically and periodically within a database. Retention policy
+defines for how long InfluxDB keeps the data. By using these concepts together, one can use
+a continuous query to aggregate old data into a lower temporal resolution and delete the
+original data automatically by setting an appropriate retention policy.
+
+\section{Lossless compression}
+Lossless compression is a method of data compression that allows to reconstruct the original
+data from the compressed data \cite{WikipediaContributors2019Data}. When applied to time series, it is used when we are
+interested in retaining the original data but we want to reduce storage space. In this
+section, we will present two different algorithms that have been devised to solve different
+problems. The first algorithm was created at Facebook to face the huge amount of data
+gathered by monitoring their systems. This algorithm has allowed them to store all data
+in memory, thus improving considerably reading and writing performance.
+The second algorithm we present, called Sprintz, was created to limit the energy consumption
+of IoT devices. By sending compressed data, the network interface use is reduced, thus
+obtaining considerable power savings.
