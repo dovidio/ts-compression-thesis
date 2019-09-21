@@ -20,7 +20,7 @@ formula: $D = (t_{n} - t_{n-1}) - (t_{n-1} - t_{n-2})$, where t is a value in th
 sequence. This variation is useful when the deltas between values are big but almost always
 the same, for example, if we record data every minute the delta between the timestamps measured
 in seconds will always be 60, and by re-applying delta encoding we will transform the values
-to 0. As an example, in the first column of table~\ref{tab:delta}, we have 6 Unix time timestamps
+to 0. As an example, in the first column of Table~\ref{tab:delta}, we have 6 Unix time timestamps
 in seconds. In the second column, we have the delta between these timestamps, while in the
 third column we have the delta of delta.
 Since the timestamps were collected roughly every minute, the delta is always around 60 seconds,
@@ -93,7 +93,7 @@ we call $N$, proceed as follows:
 	\item Code the $j = \lfloor\frac{|n|}{2^k}\rfloor$ remaining bits as $j$ 1’s followed by a 0
 	\item If $n$ is non-negative, prepend 0, else prepend 1
 \end{itemize}
-By applying these rules with $k = 2$, we obtain the codes in table~\ref{tab:rice}
+By applying these rules with $k = 2$, we obtain the codes in Table~\ref{tab:rice}
 \begin{table}[]
 \centering
 \begin{tabular}{l|l}
@@ -157,7 +157,7 @@ As a practical example, let us try to encode the following sequence:
 \begin{center}
 Seq = c a b r a c a d a b r a r r a r r a d
 \end{center}
-For this example we will use $j=7$ and $k=6$. The sequence encoding is described in table~\ref{tab:lz}.
+For this example we will use $j=7$ and $k=6$. The sequence encoding is described in Table~\ref{tab:lz}.
 \begin{table}[!htbp]
 \centering
 \begin{tabular}{p{1.5cm}|p{2.5cm}|p{3.5cm}|p{2cm}}
@@ -174,3 +174,43 @@ adabrar          & rarrad & rarra & $<4, 5, d>$ \\
 The encoded sequence will look like this: cabraca$<0,0,d><0, 4, r><4, 5, d>$.
 Over the years, many different variations of this algorithm have been proposed,
 but the basic principles are to be found in every general-purpose compression algorithm.
+
+\section{Huffman encoding}
+Huffman encoding is a lossless compression algorithm that produces a variable-length code
+Table, whereby each symbol is associated with a given prefix which length is proportional
+to the number of occurrences of the symbol. The algorithm uses a binary tree of nodes.
+Each node can be a leaf node or an internal node and contains a value (a character) and a
+frequency. To build up the tree, apply the following steps:
+\begin{enumerate}
+    \item create a leaf node for each character and add them to a priority queue, where
+    the priority is the inverse of the frequency in which they occur
+    \item while there is more than one node in the queue
+    \begin{enumerate}
+        \item remove the two nodes of highest priority (lowest frequency from the queue)
+        \item add a new internal node with the two nodes as children and with a frequency
+        equals to the sum of the frequency of the two nodes. Add this node to the priority queue
+    \end{enumerate}
+    \item the remaining node is the root node and the tree is complete
+\end{enumerate}
+The leaf of the tree contains all the characters we wanted to encode. The build the prefix
+code for a given character, we traverse the tree until the node containing the character is
+found. Every left turn is encoded as 0 while the right turn is encoded as 1.
+As a practical example, consider the characters A, B, C, D with the associated frequency
+3, 5, 7, 2. After having executed step 1, we are entering the loop of step 2.
+We remove the node A and D since they have the lowest frequency and we add a new node
+(let us call it E) to the tree with frequency 5 having A as a left child and D as a right
+child. We also add this node to the priority queue. The next nodes to be removed from the
+priority queue are B and E. We create a new node F, with frequency 10, that has B as a left
+child and E as a right child. We add F to the priority queue.
+We have two nodes left in the priority queue, C and F. We remove them, and we create a new
+node G, with frequency 17 that has C as a left child and F as right child. We then add this
+node to the priority queue. At this point, the loop ends as our tree is already completed.
+The resulting tree is depicted in Figure~\ref{huffman_tree}.
+
+\begin{figure}[!htbp]
+\begin{center}
+\includegraphics[width=200pt]{huffmanTree}
+\caption[huffman_tree]{Huffman tree for characters A, B, C, D with frequency 3, 5, 7, 2.}
+\label{huffman_tree}
+\end{center}
+\end{figure}
