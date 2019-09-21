@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: fi.iki.yak:compression-gorilla:2.1.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/fi.iki.yak/compression-gorilla/2.1.1/2ba5c75a76339495bea76c8dd1d756a7eb44299b/compression-gorilla-2.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/fi.iki.yak/compression-gorilla/2.1.1/fc77ca86ae83e3ad6ccb43f68ba2a6a9311bec59/compression-gorilla-2.1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

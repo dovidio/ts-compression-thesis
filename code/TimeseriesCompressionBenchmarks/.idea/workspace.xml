@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f2496f9f-0fab-483b-b784-025e28ec2de7" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JUnit4 Test Class" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GroovyConsoleState">
+    <option name="list">
+      <list>
+        <Entry>
+          <option name="url" value="file://$APPLICATION_CONFIG_DIR$/consoles/groovy/groovy_console.groovy" />
+          <option name="moduleName" value="TimeseriesCompressionBenchmarks" />
+          <option name="title" value="TimeseriesCompressionBenchmarks (Bundled Groovy 2.4.17)" />
+        </Entry>
+      </list>
+    </option>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="1QKkSfjEWSbswLMIDKveJXud9m1" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="GO_FMT" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4" value="" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.dovidio.tsbenchmark" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\umber\Documents\Development\TimeseriesCompressionBenchmarks\src\main\java\com\dovidio\tsbenchmark" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.CompressGorilla">
+    <configuration name="CompressGorilla" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="com.dovidio.tsbenchmark.Main" />
+      <module name="TimeseriesCompressionBenchmarks.main" />
+      <option name="PROGRAM_PARAMETERS" value="gorilla C:\Users\umber\go\src\github.com\timescale\tsbs\cmd\tsbs_generate_data\1_year_1_host.txt" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CompressLZ4" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.dovidio.tsbenchmark.Main" />
+      <module name="TimeseriesCompressionBenchmarks.main" />
+      <option name="PROGRAM_PARAMETERS" value="lz4 C:\Users\umber\go\src\github.com\timescale\tsbs\cmd\tsbs_generate_data\1_year_1_host.txt" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CompressZstandard" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.dovidio.tsbenchmark.Main" />
+      <module name="TimeseriesCompressionBenchmarks.main" />
+      <option name="PROGRAM_PARAMETERS" value="zstandard C:\Users\umber\go\src\github.com\timescale\tsbs\cmd\tsbs_generate_data\1_year_1_host.txt" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Deflate" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.dovidio.tsbenchmark.Main" />
+      <module name="TimeseriesCompressionBenchmarks.main" />
+      <option name="PROGRAM_PARAMETERS" value="deflate C:\Users\umber\go\src\github.com\timescale\tsbs\cmd\tsbs_generate_data\1_year_1_host.txt" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AppTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.dovidio.tsbenchmark.AppTest&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":cleanTest" />
+            <option value=":test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="AppTest.gorillaCornerCase" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.dovidio.tsbenchmark.AppTest.gorillaCornerCase&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":cleanTest" />
+            <option value=":test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="PMC_MRTest.entirelyCompressibleTS" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.dovidio.tsbenchmark.PMC_MRTest.entirelyCompressibleTS&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":cleanTest" />
+            <option value=":test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="PMC_MRTest.nonCompressibleTS" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.dovidio.tsbenchmark.PMC_MRTest.nonCompressibleTS&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":cleanTest" />
+            <option value=":test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.CompressLZ4" />
+      <item itemvalue="Application.Deflate" />
+      <item itemvalue="Application.CompressZstandard" />
+      <item itemvalue="Application.CompressGorilla" />
+      <item itemvalue="Gradle.AppTest" />
+      <item itemvalue="Gradle.PMC_MRTest.entirelyCompressibleTS" />
+      <item itemvalue="Gradle.PMC_MRTest.nonCompressibleTS" />
+      <item itemvalue="Gradle.AppTest.gorillaCornerCase" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.AppTest.gorillaCornerCase" />
+        <item itemvalue="Application.CompressGorilla" />
+        <item itemvalue="Gradle.PMC_MRTest.entirelyCompressibleTS" />
+        <item itemvalue="Gradle.PMC_MRTest.nonCompressibleTS" />
+        <item itemvalue="Gradle.AppTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f2496f9f-0fab-483b-b784-025e28ec2de7" name="Default Changelist" comment="" />
+      <created>1567526676580</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1567526676580</updated>
+      <workItem from="1567526680743" duration="2470000" />
+      <workItem from="1567677740992" duration="818000" />
+      <workItem from="1567678653735" duration="17706000" />
+      <workItem from="1567711772733" duration="5091000" />
+      <workItem from="1568661218463" duration="4944000" />
+      <workItem from="1568739349701" duration="6640000" />
+      <workItem from="1568830449753" duration="1564000" />
+      <workItem from="1568833705115" duration="6045000" />
+    </task>
+    <task id="LOCAL-00001" summary="ignore idea">
+      <created>1568745168754</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1568745168754</updated>
+    </task>
+    <task id="LOCAL-00002" summary="introduce interface and implement gorilla + lz4">
+      <created>1568745281422</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1568745281423</updated>
+    </task>
+    <task id="LOCAL-00003" summary="implement high compressor">
+      <created>1568745507457</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1568745507457</updated>
+    </task>
+    <task id="LOCAL-00004" summary="add zstandard, update run configurations">
+      <created>1568745950410</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1568745950410</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add deflate to compressors available">
+      <created>1568831976118</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1568831976118</updated>
+    </task>
+    <task id="LOCAL-00006" summary="fix bug with compression">
+      <created>1568835406169</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1568835406169</updated>
+    </task>
+    <task id="LOCAL-00007" summary="switch to default cassandra generator">
+      <created>1568839794046</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1568839794046</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="ignore idea" />
+    <MESSAGE value="introduce interface and implement gorilla + lz4" />
+    <MESSAGE value="implement high compressor" />
+    <MESSAGE value="add zstandard, update run configurations" />
+    <MESSAGE value="add deflate to compressors available" />
+    <MESSAGE value="fix bug with compression" />
+    <MESSAGE value="switch to default cassandra generator" />
+    <option name="LAST_COMMIT_MESSAGE" value="switch to default cassandra generator" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/dovidio/tsbenchmark/AppTest.java</url>
+          <line>13</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/dovidio/tsbenchmark/PMC_MRTest.java</url>
+          <line>14</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/dovidio/tsbenchmark/PMC_MR.java</url>
+          <line>77</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/dovidio/tsbenchmark/PMC_MRTest.java</url>
+          <line>28</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/dovidio/tsbenchmark/PMC_MR.java</url>
+          <line>56</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/dovidio/tsbenchmark/compressor/LZ4.java</url>
+          <line>22</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/dovidio/tsbenchmark/Main.java</url>
+          <line>86</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/dovidio/tsbenchmark/compressor/Gorilla.java</url>
+          <line>42</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/dovidio/tsbenchmark/DataPoint.java</url>
+          <line>26</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <condition expression="timeSeries.name.equals(&quot;mem,hostname=host_2,region=us-west-2,datacenter=us-west-2b,rack=11,os=Ubuntu16.10,arch=x86,team=NYC,service=17,service_version=0,service_environment=test,buffered&quot;)" language="JAVA" />
+          <url>file://$PROJECT_DIR$/src/main/java/com/dovidio/tsbenchmark/compressor/Gorilla.java</url>
+          <line>15</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/dovidio/tsbenchmark/compressor/Gorilla.java</url>
+          <line>30</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/dovidio/tsbenchmark/AppTest.java</url>
+          <line>14</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/fi.iki.yak/compression-gorilla/2.1.1/fc77ca86ae83e3ad6ccb43f68ba2a6a9311bec59/compression-gorilla-2.1.1-sources.jar!/fi/iki/yak/ts/compression/gorilla/GorillaCompressor.java</url>
+          <line>50</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Remote">
+        <watch expression="out" language="JAVA" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>
