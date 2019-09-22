@@ -230,7 +230,7 @@ If the header does not contain all zeros, then after predicting the value we als
 the error value, which is present in the payload. The value will be the predicted value plus
 the error value. The forecaster is then updated with the current parameters.
 
-\begin{algorithm}[H]
+\begin{algorithm}
 \caption{Sprintz decoding algorithm \cite{Blalock2018Sprintz}}\label{sprintz_decoding}
 \begin{algorithmic}[1]
 \Procedure{decodeBlock}{bytes, $B, D$, forecaster}
@@ -464,3 +464,209 @@ and the anchor variable is updated. The approximation can be improved by using o
 Most of them are batch algorithms \cite{Douglas1973Algorithms}\cite{Park1999Fast}
 \cite{Keogh1998An}, but some online alternatives have been
 proposed as well \cite{Keogh2001An}.
+
+\subsection{ModelarDB}
+ModelarDB is a time-series database management system that was designed to store and query
+massive amounts of high-quality sensor data ingested in real-time from many sensors
+\cite{jensen_2018_modelardb}.
+To tackle these problems, model-based compression was used. Model-based compression is a
+lossy compression technique that stores a representation that can recreate data within a
+known error bound. For example, PLA is a type of model-based compression, using linear
+equations to represent data. ModelarDB is model agnostic, this means that it uses multiple
+models depending on the one with the best fit. It also supports user-defined models.
+Users can extend the system with their own compression models.
+
+\subsubsection{Model-Agnostic Compression Algorithm}
+ModelarDB uses a model agnostic compression algorithm so that users can extend the set of
+compression models. Data is stored as segments, where each segment stores multiple data
+points and can use a different model. In order to satisfy latency constraints, two types
+of segments are used, namely a temporary segment (ST) and a finalized segment (SF).
+The STs are emitted based on a user-defined latency in terms of data points not yet
+emitted to the stream, while SFs are emitted when a new data point cannot be represented
+by the set of models used.
+We have an example of how the algorithm works below in Figure~\ref{modelar}. For this example,
+the latency is three data points, and a single linear model is used. At $t_3$  we have three
+points, and an ST is emitted since the number of represented points equals the latency.
+As the model M might be able to fit more data points, the points are kept in a buffer and
+the next data point is added at $t_4$. At $t_5$, M cannot fit all data points within the
+user-specified error bound, so it emits then an SF with the 4 fittable values and a
+new segment is created from datapoint 5. After a user-defined bulk write size is
+reached,  the segments are flushed to disk.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=400pt]{modelar}
+\caption[modelar]{A depiction of the ModelarDB compression algorithm, taken from \cite{jensen_2018_modelardb}}
+\label{modelar}
+\end{center}
+\end{figure}
+
+The pseudo-code is listed in Algorithm~\ref{alg_modelar}.
+\begin{algorithm}
+\caption{Online model-agnostic compression algorithm \cite{jensen_2018_modelardb}}\label{alg_modelar}
+\begin{algorithmic}[1]
+\Procedure{modelarDB}{series, tolerance}
+\State{Let series be the time series of data points}
+\State{Let models be the list of models to select from}
+\State{Let tolerance be the user defined error bound}
+\State{Let limit be the limit on the length of each segment}
+\State{Let latency be the latency in non emitted data points}
+\State{Let interval be the sampling interval of the time series}
+
+\State{model $ \leftarrow $ models.head() }
+\State{buffer $ \leftarrow $ createList()}
+\State{yetEmitted $ \leftarrow $ $0$}
+\State{previous $ \leftarrow $ $nil$}
+
+\While{series.hasMoreSamples()}
+    \State{dataPoint = series.getNextDataPoint()}
+    \If{timeDifference(previous, dataPoint) $>$ interval}
+        \State{flushBuffer(buffer)}
+    \EndIf
+    \State{appendDataPointToBuffer(dataPoint, buffer)}
+    \State{previous $\leftarrow$ dataPoint}
+    \If{appendDataPointToBuffer(\par
+        \hskip\algorithmicindent dataPoint, buffer, tolerance, limit)}
+        \State{yetEmitted $\leftarrow$ yetEmitted + 1}
+        \If{yetEmitted = latency}
+            \State{emitTemporarySegment(model, buffer)}
+            \State{yetEmitted $\leftarrow$ 0}
+        \EndIf
+    \ElsIf{models.hasMoreModels()}
+        \State{model $\leftarrow$ models.getNextModel()}
+        \State{initialize(model, buffer)}
+    \Else
+        \State{emitFinalizedSegment(models, buffer)}
+        \State{model $\leftarrow$ models.head()}
+        \State{initialize(model, buffer)}
+        \State{yetEmitted $\leftarrow$ min(yetEmitted, buffer.lenght())}
+    \EndIf
+\EndWhile
+\State{flushBuffer(buffer)}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+After initializing variables, we iterate through all the values of the time series (line 12).
+In case a value was lost, we flush the current buffer (lines 14-16). The data point is then
+added to the buffer, and we set previous to the current data point. The data point is then
+added to the model. If the model can still fit the data point, the yetEmitted variable is
+increased. If this variable has reached the user-defined latency, then a temporary segment
+is emitted and the variable is set to 0.
+If the model cannot accept another data point without exceeding the user-defined error,
+then a new model is initialized with the current buffer (lines 25-27). When the list of
+models becomes empty, an SF containing the model with the highest compression ratio is
+emitted in Line 29. We then initialize the first model with the remaining points in the
+buffer (lines 30-32).
+We then update yetEmitted to reflect the decrease in the number of emitted points.
+Finally, we flush the remaining data points in the buffer in line 35.
+
+\section{General-purpose algorithms}
+In this section, we will analyze some general-purpose algorithms that have been used in
+time series databases. We start with LZ4, an extremely fast compression algorithm inspired
+by LZ77. We continue with Deflate, an algorithm that mixes dictionary compression and entropy
+compression. We will finish with ZStandard, an open-source Deflate alternative.
+
+\subsection{LZ4}
+LZ4 is a lossless compression algorithm focused on compression and decompression speed
+based on LZ77 \cite{Ziv1977A}\cite{lz42019lz4lz4}. As LZ77, LZ4 uses a sliding windows
+consisting of a search buffer and a look-ahead buffer. Repetitive data is replaced with
+an index to the search buffer. An LZ4 compressed block is composed of sequences.
+A sequence consists of a token, literal length, offset and matched length, as
+shown in the following table.
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{l|l|l|l|l}
+\textbf{Token} & \textbf{Literals Length} & \textbf{Literals} & \textbf{Offset} & \textbf{Match Length} \\ 
+\hline
+1 byte & $0-n$ bytes & $0-|Literals|$ bytes & 2 bytes & $0-n$ bytes \\
+\end{tabular}
+\end{table}
+The token is a 1-byte value separated in two 4 bits fields. The four most significant bits,
+which can range from 0 to 15, represent the length of the literals that will follow. Since
+the literals can be of any length, bytes are dynamically added if they cannot fit in the 4
+bits in the literals length part of the block. For example, suppose we want to represent
+the value 470. Then the first part of the token will be set to 15, and we would need to
+read a byte from the literal length part. This byte will be 255. When the byte is 255,
+we need to read a new byte. This byte will be 200. When the byte is not 255, we know that
+this was the last byte in the literal length part. So in total we will have
+15 + 255 + 200 = 470 bits.
+This mechanism scales linearly with the length of literals, but this is not a problem
+since most of the time the length of the literal is small.
+The four least significant bits of the token indicates the match length. As with the
+length of the literal, this number has no limitations and can be expanded by adding new
+bytes to the match length section of the block.
+Following the token and the length of the optional literal, we have the literals part of
+the block. It is possible that this part is skipped (this happens when the word is
+entirely matched in the dictionary).
+The offset is composed of two bytes, and it represents the offset from the position where
+the match begins.
+Let us make a practical example. Suppose that during the LZ4 compression we have the following
+binary string in our search buffer
+$$S = 00001111000011110101$$
+We want to compress the following string by refering the search buffer:
+$$S' = 0011110000111101011111$$
+We notice that the first 18 bits are identical to the last 18 bits in the search buffer. Thus
+we will only to include the last 4 bits in the literals section of the block.
+We already know how the token byte will look like: 0100|1111. The first 4 bits indicate that
+we have a 4 bits literal length. The last 4 bits indicate that we have a match bigger than
+15 bits, therefore we need to check for additional bytes in the match length part of the block.
+Since the literals length is $< 15$, we do not need any lietals length additional bytes.
+Next we can encode the literals as 1111. We then need to encode the offset, which is 18.
+So far we have the following bits: $01001111 1111 00000000 00010010$.
+The last part is to include an additional match length byte, to obtain 18 bits of matched
+length. This last byte will encode 3 (we must sum the 15 bits of the token to obtain 18).
+The final block encoding $S'$ thus looks like the following:
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{l|l|l|l|l}
+\textbf{Token} & \textbf{Literals Length} & \textbf{Literals} & \textbf{Offset} & \textbf{Match Length} \\ 
+\hline
+01001111 & / & 1111 & 00000000 00010010 & 00000011 \\
+\end{tabular}
+\end{table}
+
+\subsection{Deflate}
+Deflate uses both LZ77 and Huffman coding to achieve compression \cite{LPeterDeutsch1996DEFLATE}. 
+A compressed data set is composed of blocks. Each block can use a
+different “mode” of compression. There are three available modes:
+\begin{enumerate}
+    \item No compression. Useful when data has already been compressed
+    \item Compression, with LZ77 and Huffman coding in sequence. The trees
+    used are the ones in the specification.
+    \item Compression, with LZ77 and Huffman coding. The compressor
+    creates the trees and store them with the data.
+\end{enumerate}
+Each block consists of two parts: a pair of Huffman code trees that describe the
+representation of the compressed data part, and a compressed data part. The compressed
+data parts consist of literals and pointers to the duplicated strings, represented as
+$<length, distance>$ pairs. Each type of value (literals, distances and lengths) in the
+compressed data is represented using Huffman code, using one code tree for literals and
+lengths and a separate one for distances. When using compression mode 2, the Huffman codes
+are not explicitly represented in the data, as they can be generated by the decompressor.
+This is because mode 2 uses a Huffman tree with two further restrictions as compared to
+the standard Huffman tree:
+\begin{itemize}
+    \item elements with shorter codes are placed left to element with longer codes
+    \item elements with the same length are ordered lexicographically
+\end{itemize}
+The reason why these two restrictions are placed upon trees, is that with these restrictions
+for a given set of elements and their respective length there is only one possible tree.
+When using mode 3, the Huffman codes for the two alphabets must be included. Deflate has
+many implementations that differ in some minor details. The most popular are zip, gzip, and
+zlib.
+
+\subsection{ZStandard}
+ZStandard was built to be a replacement for deflate for faster and more effective compression
+\cite{ColletY2018Smaller}. It uses Finite State Entropy (FSE) \cite{ColletY2013Finite}
+and it is optimized for modern CPUs. Finite State Entropy can be seen as a replacement
+for Huffman encoding: it allows for the same compression ratio while improving
+on the speed \cite{ColletY2013Finite}. The details of FSE are outside the scope of
+this thesis, but the interested reader can find more information in \cite{ColletY2013Finite}
+\cite{ColletY2014FSE}.
+ZStandard is a versatile compression algorithm, suitable for usage in widely
+different circumstances. It is faster both in compression and decompression
+speed as compared to zlib, while achieving similar compression ratios \cite{ColletY2018Smaller}.
+ZStandard offers also a specific training mode for smaller files by using a
+pre-generated dictionary. This can be an interesting use case for compressing
+JSON data returned by web services.
