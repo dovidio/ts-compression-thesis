@@ -402,6 +402,7 @@ Algorithm~\ref{PMC_MR} lists the procedure taken from \cite{Lazaridis2003Capturi
     \State{n $ \leftarrow $ n + 1 }
 \EndWhile
 \State{\textbf{append}($\frac{M + m}{2}, n-1$) \textbf{to} PCA(series)}
+\State{\textbf{return} PCA(series)}
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
@@ -422,8 +423,44 @@ In Figure~\ref{pca} we have a visual representation of how the series has change
 
 \begin{figure}[!htbp]
 \begin{center}
-\includegraphics[width=400pt]{pca}
+\includegraphics[width=300pt]{pca}
 \caption[pca]{A time series before and after applying the PMC-MR algorithm.}
 \label{pca}
 \end{center}
 \end{figure}
+
+\subsection{Piecewise Linear Approximation}
+Piecewise Linear Approximation (PLA) is the natural evolution of PCA. Instead of
+approximating multiple values with a single constant value, we approximate a time series
+S with k straight lines. Algorithm~\ref{PLA} is one popular algorithm that produces a PLA.
+
+\begin{algorithm}
+\caption{Online Piecewise Linear Approximation \cite{Lazaridis2003Capturing}}\label{PLA}
+\begin{algorithmic}[1]
+\Procedure{pla}{series, tolerance}
+\State{PLA(series) $ \leftarrow $ $\langle \rangle$ }
+\State{anchor $ \leftarrow $ 1 }
+\While{not finished segmenting time series}
+    \State{i $ \leftarrow $ 2 }
+    \While{calculateError(series[anchor:anchor $+ i$]) $<$ tolerance }
+        \State{\textbf{append} createSegment(series[anchor:anchor+i]) \textbf{to} PLA(series)}
+        \State{anchor $\leftarrow$ anchor + 1}
+    \EndWhile
+\EndWhile
+\State{\textbf{return} PLA(series)}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+This algorithm resembles PMC-MR, in that it grows a segment until it can fit the user-defined
+max error. The algorithm keeps track of two variables: anchor, which define the start index
+of a potential segment, and $i$, which defines the end of the segment. It appends the generated
+segments to  In line 6-7 it checks
+whether the segment from anchor to anchor + $i$ is able to represents the original values
+within the tolerance value defined.
+When this condition is satisfied, the index $i$ is increased. If that is not the case,
+then the segment from anchor to anchor + $i - 1$ is appended to the PLA(series)
+and the anchor variable is updated. The approximation can be improved by using other variations.
+Most of them are batch algorithms \cite{Douglas1973Algorithms}\cite{Park1999Fast}
+\cite{Keogh1998An}, but some online alternatives have been
+proposed as well \cite{Keogh2001An}.
