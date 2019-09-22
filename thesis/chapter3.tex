@@ -141,3 +141,220 @@ remaining 19\% are stored with the ‘11’ prefix (case 3b), with an average si
 due to the 13 bits extra overhead.
 
 \subsection{Sprintz}
+Sprintz is a compression algorithm that is specifically tailored for Internet of Things (IoT)
+devices \cite{Blalock2018Sprintz}. These devices have low power consumption and computational limits. Sprintz
+reduces the amount of data sent over the network while still being efficient enough to be
+run on low powered devices. The design requirements of Sprintz were the following:
+\begin{itemize}
+    \item \textbf{Small block size}. IoT devices usually do not have much memory, therefore it is not
+    possible to buffer large quantities of data. Moreover using large buffers introduces high
+    latency which is not favorable for many real-time applications.
+
+    \item \textbf{High decompression speed}. Decompression speed is paramount for all those applications
+    which are read-heavy. Compression speed, on the other hand, must only be fast enough to
+    keep up with the ingestion rate.
+    
+    \item \textbf{Lossless}. Instead of assuming that some level of downsampling is appropriate for
+    all data, the approach used by Sprintz is to keep the original data quality and leave to
+    the developer the choice to downsample data in the preprocessing stage.
+\end{itemize}
+Sprintz is also targeted to multivariate time series. In a multivariate time series,
+each record consists of multiple values. Each value is associated with a dimension. This
+contrasts with univariate time series, whereby there is only one dimension.
+
+\subsubsection{Sprintz components}
+Sprintz can be described as a bit packing-based predictive coder \cite{Blalock2018Sprintz}.
+It consists of four components:
+\begin{itemize}
+    \item An online forecaster, that predict the next value in the time series. Sprintz
+    saves the error between the predicted value and the real value. This value is supposed
+    to be 0 most of the time
+    \item A bit packer, that packs the error as a payload and adds sufficient information
+    to the header to invert the bit packing
+    \item Run-length encoding: Sprintz stores the number of 0 blocks instead of an empty
+    payload
+    \item Entropy coding: Sprintz uses Huffman coding for the header and the payload
+\end{itemize}
+
+\subsubsection{Encoding}
+The basic algorithm is outlined in the following pseudo-code listing:
+
+\begin{algorithm}
+\caption{Sprintz encoding algorithm}\label{sprintz_encoding}
+\begin{algorithmic}[1]
+\Procedure{encodeBlock}{$\{x_1, \ldots, x_b\}$, forecaster}
+\State{Let buff be a temporary buffer}
+\For {$i \leftarrow 1,\ldots,B$}\Comment{for each sample} \label{line:bodyStart}
+    \State{$ \hat{x_i} \leftarrow $ forecaster.predict$(x_{i-1})$}
+    \State{$err_i \leftarrow $ $x_i - \hat{x_i}$}
+    \State{forecaster.train($x_{i-1}, x_i, err_i$)}
+\EndFor
+\For {$j \leftarrow 1,\ldots,D$}\Comment{for each column}
+    \State{$ nbits_j \leftarrow $ $max_i$\{requiredNumBits$(err_{ij}))$\}}
+    \State{$ packed_j \leftarrow $ bitPack($\{err_{1j}, \ldots, err_{Bj}\}, nbits_j$)} 
+\EndFor \label{line:bodyEnd}
+\State{// Run-length encode if all errors are zero}
+\If{$nbits_j$ == $0$, $1 \le j \le D$}
+    \Repeat  \Comment{Scan until end of run}
+        \State{Read in another block and run lines \ref{line:bodyStart}-\ref{line:bodyEnd}}
+    \Until {$\exists_j[nbits_j \neq 0] $}
+    
+    \State{Write $D$ 0s as headers into buff}
+    \State{Write number of all-zero blocks as payload into buff}
+    \State{Output huffmanCode(buff)}
+\EndIf
+\State{Write $nbits_j$, $j = 1,\ldots,D$ as headers into buff}
+\State{Write $packed_j$, $j = 1,\ldots,D$ as payload into buff}
+\State{Output huffmanCode(buff)}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+In line 3-7 the forecaster is used to predict the value, get the error of the forecaster,
+and update the forecaster with the current parameters. Then in line 8-11, the maximum number
+of bits needed for representing the max value is computed for each column. If all the
+dimensions had a 0 error, new blocks are read until an error is found.
+Run-length encoding is then used to encode the 0 errors (line 17-19). The header is written
+as zeros repeated for the number of dimensions. The payload consists of the number of zero
+blocks found. Header and payload are then further compressed using Huffman code. 
+If non-zeroes errors were found, then the header will include a header containing the bit
+width of each dimension. The values are then packed in the payload. Header and payload are
+then encoded using Huffman encoding.
+
+\subsubsection{Decoding}
+The decoding is simpler than the encoding. The first step is to decode the Huffman-bitstream
+into a header and a payload. Once decoded, the header is examined. If it contains all 0, it
+means that the payload was run-length encoded. The number of run-length encoded blocks is
+read, and each value can be reconstructed by predicting its value with the forecaster.
+If the header does not contain all zeros, then after predicting the value we also need to add
+the error value, which is present in the payload. The value will be the predicted value plus
+the error value. The forecaster is then updated with the current parameters.
+
+\begin{algorithm}
+\caption{Sprintz decoding algorithm}\label{sprintz_encoding}
+\begin{algorithmic}[1]
+\Procedure{decodeBlock}{bytes, $B, D$, forecaster}
+\State{nbits, payload $ \leftarrow $ huffmanDecode(bytes, $B$, $D$) }
+\If{$nbits_j == 0$ $ \forall j $}
+    \State{numblocks $ \leftarrow$ readRunLength}
+    \For {$i \leftarrow 1,\ldots,(B \times numblocks)$}
+        \State{$ x_i \leftarrow $ forecaster.predict$(x_{i-1})$}
+        \State{Output $x_i$}
+    \EndFor
+\Else
+    \For {$i \leftarrow 1,\ldots,B$}
+        \State{$ x_i \leftarrow $ forecaster.predict$(x_{i-1})$}
+        \State{$ err_i \leftarrow $ unpackErrorVector($i$, nbits, payload)}
+        \State{$ x_i \leftarrow $ $err_j + \hat{x_i}$}
+        \State{Output $x_i$}
+        \State{forecaster.train($x_{i-1}, x_i, err_i$)}
+    \EndFor
+\EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{The forecaster}
+Sprintz uses a novel forecaster algorithm called FIRE (Fast Integer REgression). It is
+slightly slower than delta encoding but yields a better compression ratio most of the time
+\cite{Blalock2018Sprintz}. Each value is thought of as a linear combination of a fixed amount
+of previous values plus some error. The details of the forecaster are outside the scope of
+this thesis, but the interested reader can find more in the original paper
+\cite{Blalock2018Sprintz}.
+
+\newpage
+\subsubsection{Bit packing}
+Explaining bit packing will be easier by using a practical example. Suppose we want to encode
+the following time series:
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{l|l|l}
+\textbf{X} & \textbf{Y} & \textbf{Z} \\ 
+\hline
+5  & 2 & 104 \\
+10 & 2 & 103 \\
+15 & 2 & 102 \\
+20 & 2 & 101 \\
+\end{tabular}
+\end{table}
+
+We first need to compute the delta. Supposing that the value immediately preceding
+this series was time = -3, value 1 = 2, value 2 = 104, then the delta will look like the
+following table:
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{l|l|l}
+\textbf{dX} & \textbf{dY} & \textbf{dZ} \\ 
+\hline
+8 & 0 &  0 \\
+5 & 0 & -1 \\
+5 & 0 & -1 \\
+5 & 0 & -1 \\
+\end{tabular}
+\end{table}
+The next step is to apply the Zigzag encoding. Zigzag encoding is used to transform all
+values in nonnegative by representing each integer by twice its absolute value, or twice
+its absolute value minus one for negative integers so that positive integers are encoded
+as even numbers and negative integers as odd numbers, effectively using the least significant
+bit to represent the sign.
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{l|l|l}
+\textbf{dX} & \textbf{dY} & \textbf{dZ} \\ 
+\hline
+16 & 0 &  0 \\
+10 & 0 &  1 \\
+10 & 0 &  1 \\
+10 & 0 &  1 \\
+\end{tabular}
+\end{table}
+The next step is to find the bit width for each column. To do so, for each value we need to
+compute the current bit width minus the number of leading zeros. For each column, we take
+the maximum of this value, which we will call w. For example, assuming we are 8-bit integers,
+16 is represented in binary as $00010000$, so we will have $8 - 3 = 5$ bits necessary to represent
+this number. 10 is represented as $00001010$ and requires only 4 bits to be represented.
+Therefore we take the max of the two values, 5. The reason why Zigzag encoding was used is
+that computing the number of leading zeros can be done in a single assembly instruction
+(on systems that support it, such instruction is usually called \texttt{clz}). In the following table
+we list the maximum number of bits required to represent each number in each column.
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{l|l|l}
+\textbf{dX} & \textbf{dY} & \textbf{dZ} \\ 
+\hline
+5 & 0 & 1 \\
+\end{tabular}
+\end{table}
+
+The final step will be to write the header and bit pack the deltas in the payload.
+The header will consist of $D$ unsigned integers, one for each column, storing the bit widths.
+Each integer in the header is stored in $\log_2{w}$ bits.
+In the payload, values are stored contiguously.
+In the following table, we use different colors for different columns. Orange will be used
+for the $X$ column, green for the $Y$ column and blue for the $Z$ column.
+
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{l|l|l}
+\textbf{Header} & \textbf{Align} & \textbf{Payload} \\ 
+\hline
+\textcolor{orange}{$101$} \textcolor{green}{$000$} \textcolor{blue}{$001$} & $0000000$ & \textcolor{orange}{$10000$ $01010$ $01010$ $01010$} \textcolor{blue}{$0111$} \\
+\end{tabular}
+\end{table}
+
+When there are many columns, the bits for each sample are stored contiguously, adding up to
+7 bits padding when the sample does not span a multiple of a byte. The reason why this is
+not done when there are few columns is that having a 7-bit padding can reduce drastically
+the compression ratio, and in the case of univariate data it leads to expansion.
+
+\subsubsection{Entropy coding}
+For entropy coding, a Huffman coder is used. This step is optional, but the authors have
+observed increased compression ratios using it. Huffman coding is applied after bit packing
+for two reasons:
+\begin{enumerate}
+    \item Reducing the input to the Huffman coding also reduces its latency. This is
+    important as Huffman coding is slower than the rest of Sprintz
+    \item A better compression ratio is achieved as compared to the case in which Huffman
+    coding is applied first.
+\end{enumerate}
+
