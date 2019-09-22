@@ -180,7 +180,7 @@ It consists of four components:
 The basic algorithm is outlined in the following pseudo-code listing:
 
 \begin{algorithm}
-\caption{Sprintz encoding algorithm}\label{sprintz_encoding}
+\caption{Sprintz encoding algorithm \cite{Blalock2018Sprintz}}\label{sprintz_encoding}
 \begin{algorithmic}[1]
 \Procedure{encodeBlock}{$\{x_1, \ldots, x_b\}$, forecaster}
 \State{Let buff be a temporary buffer}
@@ -230,8 +230,8 @@ If the header does not contain all zeros, then after predicting the value we als
 the error value, which is present in the payload. The value will be the predicted value plus
 the error value. The forecaster is then updated with the current parameters.
 
-\begin{algorithm}
-\caption{Sprintz decoding algorithm}\label{sprintz_encoding}
+\begin{algorithm}[H]
+\caption{Sprintz decoding algorithm \cite{Blalock2018Sprintz}}\label{sprintz_decoding}
 \begin{algorithmic}[1]
 \Procedure{decodeBlock}{bytes, $B, D$, forecaster}
 \State{nbits, payload $ \leftarrow $ huffmanDecode(bytes, $B$, $D$) }
@@ -262,7 +262,6 @@ of previous values plus some error. The details of the forecaster are outside th
 this thesis, but the interested reader can find more in the original paper
 \cite{Blalock2018Sprintz}.
 
-\newpage
 \subsubsection{Bit packing}
 Explaining bit packing will be easier by using a practical example. Suppose we want to encode
 the following time series:
@@ -358,3 +357,73 @@ for two reasons:
     coding is applied first.
 \end{enumerate}
 
+\section{Lossy compression algorithms}
+This family of algorithms uses inexact approximations to represent a data series. In
+contrast with lossless compression, these algorithms do not allow to compress data and
+keep the full resolution of it. In this section, we will present some algorithms that use
+this approach. A feature of the algorithms that we present is that they allow for quality
+guarantees to be defined, that is, users can define how much the compressed values can differ
+from the original value. In the following sections, we will analyze Piecewise Constant
+Approximation, Piecewise Linear Approximation, and ModelarDB, a time series database that
+makes use of multiple algorithms to optimize the compression ratio based on the user-defined
+quality guarantees.
+
+\subsection{Piecewise Constant Approximation}
+Piecewise constant approximation represents a time series S as a sequence of K segments
+\cite{Keogh2001Locally}\cite{Lazaridis2003Capturing}:
+$$PCA(S^n) = \langle(c_1, e_1), (c_2, e_2), \ldots, (c_k, e_k))\rangle$$
+where $e_k$  is the end-point of a segment and $c_k$ is a constant value for time in
+$[e_{k-1} + 1, e_k]$ or for time in $[1, e_1]$ for the first segment. If each segment
+corresponds to many samples of the series, then high compression ratios can be achieved.
+In \cite{Lazaridis2003Capturing}, a simple algorithm name Poor Man’s Compression -
+Midrange (PMC-MR) was proposed to construct a PCA  representation of a series with
+$O(1)$ space requirements and $O(n)$ time complexity, where $n$ is the number of samples
+in a series. This algorithm does also take into consideration quality guarantees, that
+is, users can decide the maximum acceptable quality loss the algorithm will produce.
+Algorithm~\ref{PMC_MR} lists the procedure taken from \cite{Lazaridis2003Capturing}.
+
+\begin{algorithm}
+\caption{Poor Man's Compression Midrange \cite{Lazaridis2003Capturing}}\label{PMC_MR}
+\begin{algorithmic}[1]
+\Procedure{pcr}{series, tolerance}
+\State{PCA(series) $ \leftarrow $ $\langle \rangle$ }
+\State{n $ \leftarrow $ $1$ }
+\State{m $ \leftarrow $ series[n] }
+\State{M $ \leftarrow $ series[n] }
+\While{series.hasMoreSamples()}
+    \If{max\{M, series[n]\} - min\{m, series[n]\} $>$ 2 x tolerance}
+        \State{\textbf{append}($\frac{M + m}{2}, n-1$) \textbf{to} PCA(series)}
+        \State{m $ \leftarrow $ series[n] }
+        \State{M $ \leftarrow $ series[n] }
+    \Else
+        \State{m $ \leftarrow $ min\{m, series[n]\} }
+        \State{M $ \leftarrow $ max\{M, series[n]\}}
+    \EndIf
+    \State{n $ \leftarrow $ n + 1 }
+\EndWhile
+\State{\textbf{append}($\frac{M + m}{2}, n-1$) \textbf{to} PCA(series)}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+The procedure uses $n$ to represent the endpoint of the segment, and represents the
+minimum and maximum values found in the segment not yet pushed to the PCA with $m$ and
+$M$. In each cycle, we evaluate whether the range we are considering is no more than
+twice the quality boundary. If that is the case, we update $m$ and $N$. Once the current
+range exceeds this quality boundary, we push $\frac{m + M}{2}$  up until $n - 1$ and we
+reset $m$ and $M$ to the current value (which was not included in the current segment).
+As a practical example, suppose we have the following series:
+$$S = 22, 24, 31, 32, 33, 37$$
+If our quality guarantee is 3 (that is, the absolute value of the difference between the
+compressed value and the original value should never exceed 3), the series will be
+compressed to the following PCA:
+$$PCA = \langle(23, 2), (34, 6) \rangle$$
+In Figure~\ref{pca} we have a visual representation of how the series has changed.
+
+\begin{figure}[!htbp]
+\begin{center}
+\includegraphics[width=400pt]{pca}
+\caption[pca]{A time series before and after applying the PMC-MR algorithm.}
+\label{pca}
+\end{center}
+\end{figure}
