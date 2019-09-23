@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.dovidio.tsbenchmark.AppTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-09-18T20:48:57" hostname="DESKTOP-7DP606N" time="0.004">
-  <properties/>
-  <testcase name="gorillaCornerCase" classname="com.dovidio.tsbenchmark.AppTest" time="0.004"/>
-  <system-out><![CDATA[[fi.iki.yak.ts.compression.gorilla.Pair@685df9f0, fi.iki.yak.ts.compression.gorilla.Pair@28168d63]
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

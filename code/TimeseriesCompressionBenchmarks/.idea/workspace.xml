@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f2496f9f-0fab-483b-b784-025e28ec2de7" name="Default Changelist" comment="" />
+    <list default="true" id="f2496f9f-0fab-483b-b784-025e28ec2de7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../../thesis/tesi-blx.bib" beforeDir="false" afterPath="$PROJECT_DIR$/../../thesis/tesi-blx.bib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../thesis/tesi.synctex.gz" beforeDir="false" afterPath="$PROJECT_DIR$/../../thesis/tesi.synctex.gz" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,9 +22,28 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="TimeseriesCompressionBenchmarks" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="TimeseriesCompressionBenchmarks" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="TimeseriesCompressionBenchmarks" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -38,7 +60,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="GroovyConsoleState">
     <option name="list">
@@ -50,6 +72,9 @@
         </Entry>
       </list>
     </option>
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="tkqzguCC" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
@@ -63,6 +88,7 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4" value="" />
     <property name="go.import.settings.migrated" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
@@ -92,11 +118,11 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.CompressGorilla">
+  <component name="RunManager" selected="Gradle.TimeseriesCompressionBenchmarks [jar]">
     <configuration name="CompressGorilla" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="com.dovidio.tsbenchmark.Main" />
       <module name="TimeseriesCompressionBenchmarks.main" />
-      <option name="PROGRAM_PARAMETERS" value="gorilla C:\Users\umber\go\src\github.com\timescale\tsbs\cmd\tsbs_generate_data\1_year_1_host.txt" />
+      <option name="PROGRAM_PARAMETERS" value="gorilla" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -124,26 +150,6 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
-    </configuration>
-    <configuration name="AppTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.dovidio.tsbenchmark.AppTest&quot;" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":cleanTest" />
-            <option value=":test" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
-      <method v="2" />
     </configuration>
     <configuration name="AppTest.gorillaCornerCase" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -205,23 +211,42 @@
       <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
+    <configuration name="TimeseriesCompressionBenchmarks [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Application.CompressLZ4" />
       <item itemvalue="Application.Deflate" />
       <item itemvalue="Application.CompressZstandard" />
       <item itemvalue="Application.CompressGorilla" />
-      <item itemvalue="Gradle.AppTest" />
       <item itemvalue="Gradle.PMC_MRTest.entirelyCompressibleTS" />
       <item itemvalue="Gradle.PMC_MRTest.nonCompressibleTS" />
       <item itemvalue="Gradle.AppTest.gorillaCornerCase" />
+      <item itemvalue="Gradle.TimeseriesCompressionBenchmarks [jar]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.TimeseriesCompressionBenchmarks [jar]" />
         <item itemvalue="Gradle.AppTest.gorillaCornerCase" />
         <item itemvalue="Application.CompressGorilla" />
         <item itemvalue="Gradle.PMC_MRTest.entirelyCompressibleTS" />
         <item itemvalue="Gradle.PMC_MRTest.nonCompressibleTS" />
-        <item itemvalue="Gradle.AppTest" />
       </list>
     </recent_temporary>
   </component>
@@ -240,6 +265,7 @@
       <workItem from="1568739349701" duration="6640000" />
       <workItem from="1568830449753" duration="1564000" />
       <workItem from="1568833705115" duration="6045000" />
+      <workItem from="1569256541289" duration="976000" />
     </task>
     <task id="LOCAL-00001" summary="ignore idea">
       <created>1568745168754</created>
@@ -323,13 +349,8 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/dovidio/tsbenchmark/AppTest.java</url>
-          <line>13</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/java/com/dovidio/tsbenchmark/PMC_MRTest.java</url>
-          <line>14</line>
+          <line>11</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -339,7 +360,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/java/com/dovidio/tsbenchmark/PMC_MRTest.java</url>
-          <line>28</line>
+          <line>25</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -351,11 +372,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/dovidio/tsbenchmark/compressor/LZ4.java</url>
           <line>22</line>
           <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/dovidio/tsbenchmark/Main.java</url>
-          <line>86</line>
-          <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/dovidio/tsbenchmark/compressor/Gorilla.java</url>
@@ -377,11 +393,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/dovidio/tsbenchmark/compressor/Gorilla.java</url>
           <line>30</line>
           <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/dovidio/tsbenchmark/AppTest.java</url>
-          <line>14</line>
-          <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/fi.iki.yak/compression-gorilla/2.1.1/fc77ca86ae83e3ad6ccb43f68ba2a6a9311bec59/compression-gorilla-2.1.1-sources.jar!/fi/iki/yak/ts/compression/gorilla/GorillaCompressor.java</url>
