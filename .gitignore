@@ -9,3 +9,6 @@ thesis/tesi-blx.bib
 thesis/tesi.run.xml
 thesis/tesi.toc
 thesis/tesi-blx.bib
+code/TimeseriesCompressionBenchmarks/.gradle
+code/TimeseriesCompressionBenchmarks/build
+
