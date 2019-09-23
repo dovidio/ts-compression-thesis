@@ -87,7 +87,7 @@ compression achieved by Gorilla with Facebook’s data. It is interesting to not
 
 \begin{figure}[]
 \begin{center}
-\includegraphics[width=200pt]{gorillaTimestamp}
+\includegraphics[width=300pt]{gorillaTimestamp}
 \caption[gorilla_timestamp]{ Distribution of timestamp compression across different ranged buckets.
 Taken from a sample of 440,000 real timestamps in Gorilla \cite{Pelkonen2015Gorilla}}
 \label{gorilla_timestamp}
@@ -179,7 +179,7 @@ It consists of four components:
 \subsubsection{Encoding}
 The basic algorithm is outlined in the following pseudo-code listing:
 
-\begin{algorithm}
+\begin{algorithm}[]
 \caption{Sprintz encoding algorithm \cite{Blalock2018Sprintz}}\label{sprintz_encoding}
 \begin{algorithmic}[1]
 \Procedure{encodeBlock}{$\{x_1, \ldots, x_b\}$, forecaster}
@@ -230,7 +230,7 @@ If the header does not contain all zeros, then after predicting the value we als
 the error value, which is present in the payload. The value will be the predicted value plus
 the error value. The forecaster is then updated with the current parameters.
 
-\begin{algorithm}
+\begin{algorithm}[]
 \caption{Sprintz decoding algorithm \cite{Blalock2018Sprintz}}\label{sprintz_decoding}
 \begin{algorithmic}[1]
 \Procedure{decodeBlock}{bytes, $B, D$, forecaster}
