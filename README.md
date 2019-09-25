@@ -4,7 +4,6 @@ run the benchmark, do the following
 
 ```
 cd code/TimeseriesCompressionBenchmarks
-gradlew jar
-java -jar build/libs/TimeseriesCompressionBenchmarks.jar
-execute some command
+gradlew shadowJar
+data.txt > java -jar build/libs/TimeseriesCompressionBenchmarks-all.jar [gorilla|lz4|zstandard|deflate]
 ```
