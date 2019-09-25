@@ -4,6 +4,9 @@ plugins {
 
     // Apply the application plugin to add support for building a CLI application
     id 'application'
+
+    // Fat jar plugin
+    id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
 
 repositories {
@@ -26,12 +29,4 @@ dependencies {
 application {
     // Define the main class for the application
     mainClassName = 'com.dovidio.tsbenchmark.Main'
-}
-
-jar {
-    manifest {
-        attributes(
-                'Main-Class': 'com.dovidio.tsbenchmark.Main'
-        )
-    }
 }
