@@ -7,10 +7,7 @@ import com.dovidio.tsbenchmark.compressor.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Main {
 
@@ -77,6 +74,6 @@ public class Main {
             }
         }
 
-        System.out.printf("%d,%d,%f", initialSizeInBytes, compressedSizeInBytes, (initialSizeInBytes / (double) compressedSizeInBytes));
+        System.out.printf(Locale.US, "%d,%d,%e", initialSizeInBytes, compressedSizeInBytes, (initialSizeInBytes / (double) compressedSizeInBytes));
     }
 }
