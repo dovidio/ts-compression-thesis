@@ -7,7 +7,8 @@ foreach ($method in $compressionMethods) {
     foreach ($timeframe in $compressionTimeframes) {
         for ($i = 0; $i -lt 50; $i++) {
             Write-Host "Compressing file devops_${timeframe}h_60s_${i}.txt with compression method ${method}"
-            $statistics = Invoke-Expression "Get-Content ..\data\devops_$i.txt | Out-String -Stream | java -jar .\TimeseriesCompressionBenchmarks\build\libs\TimeseriesCompressionBenchmarks-all.jar $method"
+            $getContent = "Get-Content ..\data\devops_${timeframe}h_60s_${i}.txt"
+            $statistics = Invoke-Expression "$getContent | Out-String -Stream | java -jar .\TimeseriesCompressionBenchmarks\build\libs\TimeseriesCompressionBenchmarks-all.jar $method"
             $number_of_data_points = $timeframe * 60
             Add-Content statistics.txt "${i},${statistics},${method},${timeframe},${number_of_data_points}"
         }
