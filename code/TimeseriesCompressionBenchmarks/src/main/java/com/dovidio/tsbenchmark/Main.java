@@ -4,14 +4,17 @@
 package com.dovidio.tsbenchmark;
 
 import com.dovidio.tsbenchmark.compressor.*;
+import com.dovidio.tsbenchmark.deserializer.Deserializer;
+import com.dovidio.tsbenchmark.deserializer.DevOpsNamedDataPointExtractor;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.*;
 
+@SuppressWarnings("unchecked")
 public class Main {
 
-    static HashMap<String, TimeSeries> timeSeriesHashMap;
+    static Map<String, TimeSeries> timeSeriesHashMap;
 
     public static void main(String[] args) {
         if (args.length != 1) {
@@ -20,16 +23,10 @@ public class Main {
         }
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
         // parse file
-        timeSeriesHashMap = new HashMap<>();
-        reader.lines().forEach(line -> {
-            String[] parts = line.split(",");
-            // ignore table name and time bucket
-            String timeSeriesKey = String.join(",", Arrays.copyOfRange(parts, 1, parts.length - 3));
-            long timestamp = Long.parseLong(parts[parts.length - 2]) / 1000;
-            double value = Double.parseDouble(parts[parts.length - 1]);
-            timeSeriesHashMap.computeIfAbsent(timeSeriesKey, TimeSeries::new).append(timestamp, value);
-        });
+        Deserializer deserializer = new Deserializer(new DevOpsNamedDataPointExtractor());
+        timeSeriesHashMap = deserializer.deserialize(reader);
 
         // compress
         String compressionType = args[0].toLowerCase();
@@ -58,16 +55,17 @@ public class Main {
     static void compress(Compressor compressor) {
         int initialSizeInBytes = 0;
         long compressedSizeInBytes = 0;
-        HashMap<String, CompressedTimeSeries> compressedTimeSeries = new HashMap<>(timeSeriesHashMap.size());
+        HashMap<String, CompressedTimeSeries> compressedTimeSeriesMap = new HashMap<>(timeSeriesHashMap.size());
 
         for (TimeSeries timeSeries : timeSeriesHashMap.values()) {
-            byte[] compressedValues = compressor.compress(timeSeries);
-            initialSizeInBytes += TimeSeries.toStream(timeSeries).length;
-            compressedTimeSeries.put(timeSeries.name, new CompressedTimeSeries(initialSizeInBytes, compressedValues));
-            compressedSizeInBytes += compressedValues.length;
+            initialSizeInBytes += CompressionUtils.toStream(timeSeries).length;
+            List<Object> compressedValues = compressor.compress(timeSeries);
+            CompressedTimeSeries compressedTimeSeries = new CompressedTimeSeries(CompressionUtils.toStream(timeSeries).length, compressedValues);
+            compressedTimeSeriesMap.put(timeSeries.name, compressedTimeSeries);
+            compressedSizeInBytes += compressedTimeSeries.byteSize();
         }
 
-        for (Map.Entry<String, CompressedTimeSeries> t : compressedTimeSeries.entrySet()) {
+        for (Map.Entry<String, CompressedTimeSeries> t : compressedTimeSeriesMap.entrySet()) {
             TimeSeries restored = compressor.restore(t.getKey(), t.getValue());
             if (!Objects.equals(timeSeriesHashMap.get(restored.name), restored)) {
                 throw new RuntimeException(String.format("Could not restore compressed value of timeseries %s with compressor %s", restored.name, compressor.getClass().getSimpleName()));

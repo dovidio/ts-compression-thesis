@@ -1,12 +1,19 @@
 package com.dovidio.tsbenchmark;
 
-public class CompressedTimeSeries {
+import java.util.List;
+
+public class CompressedTimeSeries<T> {
 
     public final int initialLength;
-    public final byte[] compressedValues;
+    public final List<T> compressedValues;
 
-    CompressedTimeSeries(int initialLength, byte[] compressedValues) {
+    public CompressedTimeSeries(int initialLength, List<T> compressedValues) {
         this.initialLength = initialLength;
         this.compressedValues = compressedValues;
+    }
+
+    public int byteSize() {
+        int multiplier = compressedValues.get(0) instanceof Long ? 8 : 1;
+        return compressedValues.size() * multiplier;
     }
 }

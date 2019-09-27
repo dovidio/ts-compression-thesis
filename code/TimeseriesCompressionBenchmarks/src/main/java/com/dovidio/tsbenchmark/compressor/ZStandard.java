@@ -4,22 +4,26 @@ import com.dovidio.tsbenchmark.CompressedTimeSeries;
 import com.dovidio.tsbenchmark.TimeSeries;
 import com.github.luben.zstd.Zstd;
 
-public class ZStandard implements Compressor {
+import java.util.List;
+
+public class ZStandard implements Compressor<Byte> {
     Zstd zstd = new Zstd();
 
     @Override
-    public byte[] compress(TimeSeries timeSeries) {
-        byte[] data = TimeSeries.toStream(timeSeries);
+    public List<Byte> compress(TimeSeries timeSeries) {
+        byte[] data = CompressionUtils.toStream(timeSeries);
 
         // Compresses the data
-        return zstd.compress(data);
+        return toBytesBoxedList(zstd.compress(data));
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public TimeSeries restore(String timeSeriesName, CompressedTimeSeries compressedTimeSeries) {
         byte[] restored = new byte[compressedTimeSeries.initialLength];
-        zstd.decompress(restored, compressedTimeSeries.compressedValues);
+        byte[] compressed = toBytesArray(compressedTimeSeries.compressedValues);
+        zstd.decompress(restored, compressed);
 
-        return TimeSeries.toTimeSeries(restored);
+        return CompressionUtils.toTimeSeries(timeSeriesName, restored);
     }
 }

@@ -6,32 +6,34 @@ import com.dovidio.tsbenchmark.TimeSeries;
 import fi.iki.yak.ts.compression.gorilla.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Gorilla implements Compressor {
+public class Gorilla implements Compressor<Long> {
 
     @Override
-    public byte[] compress(TimeSeries timeSeries) {
+    public List<Long> compress(TimeSeries timeSeries) {
 
-        ByteBufferBitOutput bitOutput = new ByteBufferBitOutput();
+        LongArrayOutput bitOutput = new LongArrayOutput();
         GorillaCompressor gorillaCompressor = new GorillaCompressor(timeSeries.dataPoints.get(0).timestamp, bitOutput);
         for (DataPoint dataPoint : timeSeries.dataPoints)
             gorillaCompressor.addValue(dataPoint.timestamp, dataPoint.value);
         gorillaCompressor.close();
 
-        bitOutput.getByteBuffer().clear();
-        byte[] compressedValues = new byte[bitOutput.getByteBuffer().capacity()];
-        bitOutput.getByteBuffer().get(compressedValues, 0, compressedValues.length);
-
-        return compressedValues;
+        return Arrays.stream(bitOutput.getLongArray()).boxed().collect(Collectors.toList());
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public TimeSeries restore(String timeSeriesName, CompressedTimeSeries compressedTimeSeries) {
-        ByteBufferBitInput bitInput = new ByteBufferBitInput(compressedTimeSeries.compressedValues);
+        long[] longs = compressedTimeSeries.compressedValues.stream()
+                .mapToLong(o -> ((Long) o))
+                .toArray();
+        LongArrayInput bitInput = new LongArrayInput(longs);
         GorillaDecompressor gorillaDecompressor = new GorillaDecompressor(bitInput);
 
-        List<DataPoint> dataPoints = new ArrayList<>();
+        ArrayList<DataPoint> dataPoints = new ArrayList<>();
         TimeSeries restored = new TimeSeries(timeSeriesName);
         Pair pair = gorillaDecompressor.readPair();
 
