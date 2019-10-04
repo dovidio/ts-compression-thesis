@@ -87,7 +87,7 @@ compression achieved by Gorilla with Facebook’s data. It is interesting to not
 
 \begin{figure}[]
 \begin{center}
-\includegraphics[width=200pt]{gorillaTimestamp}
+\includegraphics[width=300pt]{gorillaTimestamp}
 \caption[gorilla_timestamp]{ Distribution of timestamp compression across different ranged buckets.
 Taken from a sample of 440,000 real timestamps in Gorilla \cite{Pelkonen2015Gorilla}}
 \label{gorilla_timestamp}
@@ -179,7 +179,7 @@ It consists of four components:
 \subsubsection{Encoding}
 The basic algorithm is outlined in the following pseudo-code listing:
 
-\begin{algorithm}
+\begin{algorithm}[]
 \caption{Sprintz encoding algorithm \cite{Blalock2018Sprintz}}\label{sprintz_encoding}
 \begin{algorithmic}[1]
 \Procedure{encodeBlock}{$\{x_1, \ldots, x_b\}$, forecaster}
@@ -230,7 +230,7 @@ If the header does not contain all zeros, then after predicting the value we als
 the error value, which is present in the payload. The value will be the predicted value plus
 the error value. The forecaster is then updated with the current parameters.
 
-\begin{algorithm}
+\begin{algorithm}[]
 \caption{Sprintz decoding algorithm \cite{Blalock2018Sprintz}}\label{sprintz_decoding}
 \begin{algorithmic}[1]
 \Procedure{decodeBlock}{bytes, $B, D$, forecaster}
@@ -291,6 +291,7 @@ following table:
 5 & 0 & -1 \\
 \end{tabular}
 \end{table}
+
 The next step is to apply the Zigzag encoding. Zigzag encoding is used to transform all
 values in nonnegative by representing each integer by twice its absolute value, or twice
 its absolute value minus one for negative integers so that positive integers are encoded
@@ -307,6 +308,7 @@ bit to represent the sign.
 10 & 0 &  1 \\
 \end{tabular}
 \end{table}
+
 The next step is to find the bit width for each column. To do so, for each value we need to
 compute the current bit width minus the number of leading zeros. For each column, we take
 the maximum of this value, which we will call w. For example, assuming we are 8-bit integers,
@@ -443,9 +445,9 @@ S with k straight lines. Algorithm~\ref{PLA} is one popular algorithm that produ
 \While{not finished segmenting time series}
     \State{i $ \leftarrow $ 2 }
     \While{calculateError(series[anchor:anchor $+ i$]) $<$ tolerance }
-        \State{\textbf{append} createSegment(series[anchor:anchor+i]) \textbf{to} PLA(series)}
         \State{anchor $\leftarrow$ anchor + 1}
     \EndWhile
+    \State{\textbf{append} createSegment(series[anchor:anchor+i]) \textbf{to} PLA(series)}
 \EndWhile
 \State{\textbf{return} PLA(series)}
 \EndProcedure
@@ -492,7 +494,7 @@ the next data point is added at $t_4$. At $t_5$, M cannot fit all data points wi
 user-specified error bound, so it emits then an SF with the 4 fittable values and a
 new segment is created from datapoint 5. After a user-defined bulk write size is
 reached,  the segments are flushed to disk.
-
+The pseudo-code is listed in Algorithm~\ref{alg_modelar}.
 \begin{figure}
 \begin{center}
 \includegraphics[width=400pt]{modelar}
@@ -500,8 +502,6 @@ reached,  the segments are flushed to disk.
 \label{modelar}
 \end{center}
 \end{figure}
-
-The pseudo-code is listed in Algorithm~\ref{alg_modelar}.
 \begin{algorithm}
 \caption{Online model-agnostic compression algorithm \cite{jensen_2018_modelardb}}\label{alg_modelar}
 \begin{algorithmic}[1]
@@ -546,7 +546,6 @@ The pseudo-code is listed in Algorithm~\ref{alg_modelar}.
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
-
 After initializing variables, we iterate through all the values of the time series (line 12).
 In case a value was lost, we flush the current buffer (lines 14-16). The data point is then
 added to the buffer, and we set previous to the current data point. The data point is then
@@ -608,7 +607,7 @@ We want to compress the following string by refering the search buffer:
 $$S' = 0011110000111101011111$$
 We notice that the first 18 bits are identical to the last 18 bits in the search buffer. Thus
 we will only to include the last 4 bits in the literals section of the block.
-We already know how the token byte will look like: 0100|1111. The first 4 bits indicate that
+We already know how the token byte will look like: 0100$|$1111. The first 4 bits indicate that
 we have a 4 bits literal length. The last 4 bits indicate that we have a match bigger than
 15 bits, therefore we need to check for additional bytes in the match length part of the block.
 Since the literals length is $< 15$, we do not need any lietals length additional bytes.

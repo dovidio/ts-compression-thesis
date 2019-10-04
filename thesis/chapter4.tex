@@ -1,0 +1,29 @@
+\chapter{Empirical evaluation of compression algorithms}
+In this chapter, we compare lossless and lossy algorithms in terms of compression performance using both real and 
+generated time series data. The lossless compression algorithms that we have chosen are Gorilla, LZ4,
+Deflate and Zstandard. For the lossy algorithm part, we take a look at how PCM and PLA perform against each other. 
+
+\section{Datasets}
+For these benchmarks, we have used three different datasets. The first dataset was generated from the
+Time Series Benchmark Suite, a project mantained by TimescaleDB \cite{}.
+The second dataset was provided by Dynatrace. Dynatrace is a Software Intelligence platform with a strong
+emphasis on application performance monitoring. The datasets consist of metrics gathered from
+different hosts running a wide range of applications under different loads.
+The third dataset is the Open Taxi Database, which contains information about taxi trips, such as the
+price of the taxi drive, amount tipped, distance of the trip.
+
+\section{Comparing lossless algorithms}
+For the lossless algorithms, we have chosen to evaluate Gorilla performance against general-purpose
+algorithms with generated and real-time series data. The metric in which we are interested is the
+compression ratio, while we don't evaluate compression speed as this is dependent of the implementations we have
+chosen. We have created a Java program that reads data from the input stream and returns the compression ratio
+achieved by the algorithm selected. We decided to use Java because we could easily find implementations for
+all the algorithms listed above. The program requires to specify the format of the dataset provided and the
+algorithm to use for compression.
+
+\section{Comparing lossy algorithms}
+The lossy algorithms we have decided to compare are Piecewise Constant Approximation and Piecewise Linear
+Approximation. Both algorithms were implemented by us in Java. We have used the same datasets as the one used
+for the lossless algorithms
+
+

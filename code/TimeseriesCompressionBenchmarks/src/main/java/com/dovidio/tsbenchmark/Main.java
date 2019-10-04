@@ -4,47 +4,29 @@
 package com.dovidio.tsbenchmark;
 
 import com.dovidio.tsbenchmark.compressor.*;
-import com.github.luben.zstd.Zstd;
-import com.google.common.collect.ImmutableList;
+import com.dovidio.tsbenchmark.deserializer.Deserializer;
+import com.dovidio.tsbenchmark.deserializer.DevOpsNamedDataPointExtractor;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.*;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
 
+@SuppressWarnings("unchecked")
 public class Main {
 
-    static HashMap<String, TimeSeries> timeSeriesHashMap;
+    static Map<String, TimeSeries> timeSeriesHashMap;
 
-    static List<String> fileList = ImmutableList.of(
-            "C:\\Users\\umber\\go\\src\\github.com\\timescale\\tsbs\\cmd\\tsbs_generate_data\\devops_1month_10hosts.txt"
-            );
-
-    public static void main(String[] args) throws Exception {
-        if (args.length != 2) {
-            System.out.println("Usage: TsBenchmark gorilla/lz4/deflate/zstandard srcFile dstFile");
+    public static void main(String[] args) {
+        if (args.length != 1) {
+            System.out.println("Usage: TsBenchmark gorilla/lz4/deflate/zstandard");
             System.exit(-1);
         }
 
-        Path path = Paths.get(fileList.get(0));
-        if (!Files.exists(path)) {
-            System.out.println("File not found");
-            System.exit(-1);
-        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         // parse file
-        timeSeriesHashMap = new HashMap<>();
-        List<String> lines = Files.readAllLines(path);
-        for (String line : lines) {
-            String[] parts = line.split(",");
-            // ignore table name and time bucket
-            String timeSeriesKey = String.join(",", Arrays.copyOfRange(parts, 1, parts.length - 3));
-            long timestamp = Long.parseLong(parts[parts.length - 2]) / 1000;
-            double value = Double.parseDouble(parts[parts.length - 1]);
-            timeSeriesHashMap.computeIfAbsent(timeSeriesKey, TimeSeries::new).append(timestamp, value);
-        }
+        Deserializer deserializer = new Deserializer(new DevOpsNamedDataPointExtractor());
+        timeSeriesHashMap = deserializer.deserialize(reader);
 
         // compress
         String compressionType = args[0].toLowerCase();
@@ -73,67 +55,23 @@ public class Main {
     static void compress(Compressor compressor) {
         int initialSizeInBytes = 0;
         long compressedSizeInBytes = 0;
-        HashMap<String, CompressedTimeSeries> compressedTimeSeries = new HashMap<>(timeSeriesHashMap.size());
+        HashMap<String, CompressedTimeSeries> compressedTimeSeriesMap = new HashMap<>(timeSeriesHashMap.size());
 
         for (TimeSeries timeSeries : timeSeriesHashMap.values()) {
-            byte[] compressedValues = compressor.compress(timeSeries);
-            initialSizeInBytes += TimeSeries.toStream(timeSeries).length;
-            compressedTimeSeries.put(timeSeries.name, new CompressedTimeSeries(initialSizeInBytes, compressedValues));
-            compressedSizeInBytes += compressedValues.length;
-
-            System.out.println(compressedValues.length);
+            initialSizeInBytes += CompressionUtils.toStream(timeSeries).length;
+            List<Object> compressedValues = compressor.compress(timeSeries);
+            CompressedTimeSeries compressedTimeSeries = new CompressedTimeSeries(CompressionUtils.toStream(timeSeries).length, compressedValues);
+            compressedTimeSeriesMap.put(timeSeries.name, compressedTimeSeries);
+            compressedSizeInBytes += compressedTimeSeries.byteSize();
         }
 
-        System.out.printf("Initial size: %d bytes. Compressed size: %d. Compression ratio: %f\n", initialSizeInBytes, compressedSizeInBytes, (initialSizeInBytes / (double) compressedSizeInBytes));
-
-        for (Map.Entry<String, CompressedTimeSeries> t: compressedTimeSeries.entrySet()) {
+        for (Map.Entry<String, CompressedTimeSeries> t : compressedTimeSeriesMap.entrySet()) {
             TimeSeries restored = compressor.restore(t.getKey(), t.getValue());
             if (!Objects.equals(timeSeriesHashMap.get(restored.name), restored)) {
                 throw new RuntimeException(String.format("Could not restore compressed value of timeseries %s with compressor %s", restored.name, compressor.getClass().getSimpleName()));
             }
         }
-    }
 
-    static TimeSeries compressDeflate(TimeSeries timeSeries) throws Exception {
-        System.out.println("====================== Starting deflate compression ======================");
-        byte[] data = TimeSeries.toStream(timeSeries);
-        System.out.println("====================== initial number of bytes: " + data.length + " ======================");
-        byte[] output = new byte[data.length];
-
-        // Compresses the data
-        Deflater compresser = new Deflater();
-        compresser.setInput(data);
-        compresser.finish();
-        int bytesAfterDeflate = compresser.deflate(output);
-        System.out.println("====================== Compressed byte number: " + bytesAfterDeflate + " ======================");
-        System.out.println("====================== Compression ratio: " + data.length / (double) bytesAfterDeflate + " ======================");
-
-        // Decompresses the data
-        Inflater decompresser = new Inflater();
-        decompresser.setInput(output, 0, bytesAfterDeflate);
-        byte[] result = new byte[data.length];
-        int resultLength = decompresser.inflate(result);
-        System.out.println("Compressed result length : " + resultLength);
-        decompresser.end();
-
-        return TimeSeries.toTimeSeries(result);
-    }
-
-    static TimeSeries compressZStandard(TimeSeries timeSeries) throws Exception {
-        System.out.println("====================== Starting Zstandard compression ======================");
-        byte[] data = TimeSeries.toStream(timeSeries);
-        System.out.println("====================== initial number of bytes: " + data.length + " ======================");
-
-        // Compresses the data
-        Zstd zstd = new Zstd();
-        byte[] bytesAfterZstd = zstd.compress(data);
-        System.out.println("====================== Compressed byte number: " + bytesAfterZstd.length + " ======================");
-        System.out.println("====================== Compression ratio: " + data.length / (double) bytesAfterZstd.length + " ======================");
-
-        // Decompress the data
-        byte[] result = new byte[data.length];
-        zstd.decompress(result, bytesAfterZstd);
-
-        return TimeSeries.toTimeSeries(result);
+        System.out.printf(Locale.US, "%d,%d,%e", initialSizeInBytes, compressedSizeInBytes, (initialSizeInBytes / (double) compressedSizeInBytes));
     }
 }
