@@ -19,7 +19,9 @@ public class Deserializer {
         Map<String, TimeSeries> timeSeriesHashMap = new HashMap<>();
         reader.lines().forEach(line -> {
             NamedDataPoint namedDataPoint = extractor.extract(line);
-            timeSeriesHashMap.computeIfAbsent(namedDataPoint.name, TimeSeries::new).append(namedDataPoint.timestamp, namedDataPoint.value);
+            if (namedDataPoint != null) {
+                timeSeriesHashMap.computeIfAbsent(namedDataPoint.name, TimeSeries::new).append(namedDataPoint.timestamp, namedDataPoint.value);
+            }
         });
 
         return timeSeriesHashMap;

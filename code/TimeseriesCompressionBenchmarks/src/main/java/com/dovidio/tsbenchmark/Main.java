@@ -6,6 +6,7 @@ package com.dovidio.tsbenchmark;
 import com.dovidio.tsbenchmark.compressor.*;
 import com.dovidio.tsbenchmark.deserializer.Deserializer;
 import com.dovidio.tsbenchmark.deserializer.DevOpsNamedDataPointExtractor;
+import com.dovidio.tsbenchmark.deserializer.DynatraceNamedDataPointExtractor;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -17,20 +18,35 @@ public class Main {
     static Map<String, TimeSeries> timeSeriesHashMap;
 
     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.out.println("Usage: TsBenchmark gorilla/lz4/deflate/zstandard");
+        if (args.length != 2) {
+            System.out.println("Usage: TsBenchmark devops/dynatrace/taxi gorilla/lz4/deflate/zstandard");
             System.exit(-1);
         }
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         // parse file
-        Deserializer deserializer = new Deserializer(new DevOpsNamedDataPointExtractor());
+        String inputFileType = args[0].toLowerCase();
+        Deserializer deserializer;
+        switch (inputFileType) {
+            case "devops":
+                deserializer = new Deserializer(new DevOpsNamedDataPointExtractor());
+                break;
+            case "dynatrace":
+                deserializer = new Deserializer(new DynatraceNamedDataPointExtractor());
+                break;
+            case "taxi":
+                System.exit(-1);
+            default:
+                String errorMessage = String.format("Unknown input data type: %s. Allowed input data type are Devops, Dynatrace, Taxi.\n", inputFileType);
+                throw new RuntimeException(errorMessage);
+        }
+
         timeSeriesHashMap = deserializer.deserialize(reader);
 
         // compress
-        String compressionType = args[0].toLowerCase();
-        com.dovidio.tsbenchmark.compressor.Compressor compressor;
+        String compressionType = args[1].toLowerCase();
+        Compressor compressor;
         switch (compressionType) {
             case "gorilla":
                 compressor = new Gorilla();
