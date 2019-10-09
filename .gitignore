@@ -11,4 +11,4 @@ thesis/tesi.toc
 thesis/tesi-blx.bib
 code/TimeseriesCompressionBenchmarks/.gradle
 code/TimeseriesCompressionBenchmarks/build
-
+code/scripts/*.env
