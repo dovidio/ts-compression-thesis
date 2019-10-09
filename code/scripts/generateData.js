@@ -26,16 +26,14 @@ const configs = [
 
 const dataDirectory = '../../data';
 
-
 const stat = fs.lstatSync(dataDirectory);
 if (!stat.isDirectory(dataDirectory)) {
-    fs.mkdirSync('../../data');
+    fs.mkdirSync(dataDirectory);
 }
-
 
 for (config of configs) {
     const start = '2019-01-01T00:00:00Z';
     for (let i = 0; i < 50; i++) {
-        child_process.execSync(`tsbs_generate_data --use-case="devops" --seed=${i} --scale=1 --timestamp-start="${start}" --timestamp-end="${config.end}" --log-interval="60s" --format="cassandra" > ../../data/devops_${config.hours}h_60s_${i}.txt`);
+        child_process.execSync(`tsbs_generate_data --use-case="devops" --seed=${i} --scale=1 --timestamp-start="${start}" --timestamp-end="${config.end}" --log-interval="60s" --format="cassandra" > ${dataDirectory}/devops_${config.hours}h_60s_${i}.csv`);
     }
 }

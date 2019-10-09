@@ -4,7 +4,7 @@ const child_process = require('child_process');
 const compressionMethods = ['gorilla', 'deflate', 'lz4', 'zstandard'];
 const compressionTimeframes = [2, 4, 8, 16, 48];
 
-const fileName = '../../data/devops_statistics.txt';
+const fileName = '../../data/devops_statistics.csv';
 
 fs.writeFileSync(fileName, 'host_id,initial_size,compressed_size,compression_ratio,compression_method,timeframe,datapoints_number\n');
 for (let method of compressionMethods) {
