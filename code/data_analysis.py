@@ -11,4 +11,10 @@ df['compression_method'].value_counts()
 
 # group by compression method and timeframe and get means
 groupedMeans = df.groupby(['timeframe', 'compression_method']).mean()['compression_ratio'].unstack()
-groupedMeans.plot()
+plt = groupedMeans.plot.bar()
+plt.legend(bbox_to_anchor=(1.2, 0.5))
+plt.set_ylabel('Compression ratio')
+plt.set_xlabel('Timeframe (hours)')
+plt.legend()
+figure = plt.get_figure()
+figure.savefig('../thesis/figure/devops_bar_chart.png')

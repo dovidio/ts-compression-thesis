@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f2496f9f-0fab-483b-b784-025e28ec2de7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../scripts/compressDevopsData.js" beforeDir="false" afterPath="$PROJECT_DIR$/../scripts/compressDevopsData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../scripts/generateData.js" beforeDir="false" afterPath="$PROJECT_DIR$/../scripts/generateData.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../thesis/tesi.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../thesis/tesi.pdf" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
