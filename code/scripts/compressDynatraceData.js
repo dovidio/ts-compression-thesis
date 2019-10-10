@@ -1,22 +1,13 @@
 const fs = require('fs');
 const child_process = require('child_process');
+const dynatraceMetrics = require('./dynatraceMetrics').dynatraceMetrics;
 
-const metrics = [
-    'builtin:host.cpu.usage',
-    'builtin:host.cpu.user',
-    'builtin:host.cpu.steal',
-    'builtin:host.cpu.load',
-    'builtin:host.mem.used',
-    'builtin:host.mem.usage',
-    'builtin:host.mem.recl',
-    'builtin:host.mem.swap.avail'
-];
 const compressionMethods = ['gorilla', 'deflate', 'lz4', 'zstandard'];
 const fileName = '../../data/dynatrace_statistics.txt';
 
 fs.writeFileSync(fileName, 'host_id,initial_size,compressed_size,compression_ratio,compression_method,timeframe,datapoints_number\n');
 for (let method of compressionMethods) {
-    for (let metric of metrics) {
+    for (let metric of dynatraceMetrics) {
         const currentFile = `../../data/dynatrace_${metric}.csv`;
         const readStream = fs.createReadStream(currentFile);
         const cmd = `java -jar ../TimeseriesCompressionBenchmarks/build/libs/TimeseriesCompressionBenchmarks-all.jar dynatrace ${method}`;

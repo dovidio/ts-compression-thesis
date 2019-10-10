@@ -1,5 +1,6 @@
 const https = require('https');
 const fs = require('fs');
+const dynatraceMetrics = require('./dynatraceMetrics').dynatraceMetrics;
 
 // load environmental variables from .env file
 const data = fs.readFileSync('.env', 'utf8');
@@ -8,19 +9,7 @@ data.split('\n').forEach((line) => {
     const key = splittedLine[0];
     const value = splittedLine[1].trim();
     process.env[key] = value;
-})
-
-// the metrics selectors we want to query
-const metricsToQuery = [
-    'builtin:host.cpu.usage',
-    'builtin:host.cpu.user',
-    'builtin:host.cpu.steal',
-    'builtin:host.cpu.load',
-    'builtin:host.mem.used',
-    'builtin:host.mem.usage',
-    'builtin:host.mem.recl',
-    'builtin:host.mem.swap.avail'
-];
+});
 
 // error check environmental variables
 const DYNATRACE_URL = process.env.DYNATRACE_URL;
@@ -41,13 +30,12 @@ const args = {
 };
 
 // create files
-for (let metric of metricsToQuery) {
-    const fileHeader = 'host,timestamp,' + metric + '\n';
-    fs.writeFileSync(`../dynatrace_${metric}.csv`, fileHeader);
+for (let metric of dynatraceMetrics) {
+    fs.closeSync(fs.openSync(`../../data/dynatrace_${metric}.csv`, 'w'));
 }
 
 // query dynatrace for each metric
-for (let metric of metricsToQuery) {
+for (let metric of dynatraceMetrics) {
     makeRequest(metric, args, undefined);
 }
 
@@ -59,7 +47,7 @@ function append(metric, data) {
         const dimensionName = s.dimensions[0];
         for (value of s.values) {
             const row = dimensionName + ',' + value.timestamp + ',' + value.value;
-            fs.appendFileSync(`../dynatrace_${metric}.csv`, row + '\n');
+            fs.appendFileSync(`../../data/dynatrace_${metric}.csv`, row + '\n');
         }    
     }
 };
