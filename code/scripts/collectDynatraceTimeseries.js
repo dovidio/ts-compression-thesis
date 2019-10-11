@@ -1,3 +1,7 @@
+// Collect dynatrace data using the dynatrace api
+// to use this file one needs a valid dynatrace url
+// and a token having read metrics permission
+
 const https = require('https');
 const fs = require('fs');
 const dynatraceMetrics = require('./dynatraceMetrics').dynatraceMetrics;
