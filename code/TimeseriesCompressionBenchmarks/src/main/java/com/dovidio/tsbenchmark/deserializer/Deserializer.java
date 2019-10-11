@@ -5,6 +5,7 @@ import com.dovidio.tsbenchmark.TimeSeries;
 
 import java.io.BufferedReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Deserializer {
@@ -18,9 +19,12 @@ public class Deserializer {
     public Map<String, TimeSeries> deserialize(BufferedReader reader) {
         Map<String, TimeSeries> timeSeriesHashMap = new HashMap<>();
         reader.lines().forEach(line -> {
-            NamedDataPoint namedDataPoint = extractor.extract(line);
-            if (namedDataPoint != null) {
-                timeSeriesHashMap.computeIfAbsent(namedDataPoint.name, TimeSeries::new).append(namedDataPoint.timestamp, namedDataPoint.value);
+            List<NamedDataPoint> namedDataPoints = extractor.extract(line);
+
+            for (NamedDataPoint dataPoint : namedDataPoints) {
+                if (dataPoint != null) {
+                    timeSeriesHashMap.computeIfAbsent(dataPoint.name, TimeSeries::new).append(dataPoint.timestamp, dataPoint.value);
+                }
             }
         });
 

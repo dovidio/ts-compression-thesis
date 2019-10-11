@@ -1,9 +1,10 @@
 package com.dovidio.tsbenchmark.deserializer;
 
 import com.dovidio.tsbenchmark.NamedDataPoint;
-import com.dovidio.tsbenchmark.TimeSeries;
+
+import java.util.List;
 
 public interface NamedDataPointExtractor {
 
-    NamedDataPoint extract(String string);
+    List<NamedDataPoint> extract(String string);
 }

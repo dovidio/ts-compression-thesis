@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f2496f9f-0fab-483b-b784-025e28ec2de7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../data_analysis.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scripts/compressDynatraceData.js" beforeDir="false" afterPath="$PROJECT_DIR$/../scripts/compressDynatraceData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../thesis/bibliography.bib" beforeDir="false" afterPath="$PROJECT_DIR$/../../thesis/bibliography.bib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../thesis/chapter4.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../thesis/chapter4.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../thesis/tesi-blx.bib" beforeDir="false" afterPath="$PROJECT_DIR$/../../thesis/tesi-blx.bib" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../thesis/tesi.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../thesis/tesi.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../thesis/tesi.synctex.gz" beforeDir="false" afterPath="$PROJECT_DIR$/../../thesis/tesi.synctex.gz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../thesis/tesi.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../thesis/tesi.tex" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -99,8 +106,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
-      <recent name="com.dovidio.tsbenchmark.compressor" />
       <recent name="com.dovidio.tsbenchmark.deserializer" />
+      <recent name="com.dovidio.tsbenchmark.compressor" />
       <recent name="com.dovidio.tsbenchmark" />
     </key>
     <key name="MoveMembersDialog.RECENTS_KEY">
@@ -160,12 +167,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="DevOpsNamedDataPointExtractorTest.extract" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="DevOpsNamedDataPointExtractorTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.dovidio.tsbenchmark.deserializer.DevOpsNamedDataPointExtractorTest.extract&quot;" />
+        <option name="scriptParameters" value="--tests &quot;com.dovidio.tsbenchmark.deserializer.DevOpsNamedDataPointExtractorTest&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -180,12 +187,12 @@
       <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="GorillaTest.compress" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="DynatraceNamedDataPointExtractorTest.extract" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;com.dovidio.tsbenchmark.compressor.GorillaTest.compress&quot;" />
+        <option name="scriptParameters" value="--tests &quot;com.dovidio.tsbenchmark.deserializer.DynatraceNamedDataPointExtractorTest.extract&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -200,23 +207,24 @@
       <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="TimeseriesCompressionBenchmarks [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="DynatraceNamedDataPointExtractorTest.extractNullDataPoint" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="--tests &quot;com.dovidio.tsbenchmark.deserializer.DynatraceNamedDataPointExtractorTest.extractNullDataPoint&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value="run" />
+            <option value=":cleanTest" />
+            <option value=":test" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
     <configuration name="TimeseriesCompressionBenchmarks [shadowJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -263,19 +271,19 @@
       <item itemvalue="Application.Deflate" />
       <item itemvalue="Application.CompressZstandard" />
       <item itemvalue="Application.CompressGorilla" />
-      <item itemvalue="Gradle.TimeseriesCompressionBenchmarks [shadowJar]" />
-      <item itemvalue="Gradle.TimeseriesCompressionBenchmarks [run]" />
-      <item itemvalue="Gradle.DevOpsNamedDataPointExtractorTest.extract" />
-      <item itemvalue="Gradle.GorillaTest.compress" />
       <item itemvalue="Gradle.ZStandardTest.compress" />
+      <item itemvalue="Gradle.DevOpsNamedDataPointExtractorTest" />
+      <item itemvalue="Gradle.DynatraceNamedDataPointExtractorTest.extractNullDataPoint" />
+      <item itemvalue="Gradle.DynatraceNamedDataPointExtractorTest.extract" />
+      <item itemvalue="Gradle.TimeseriesCompressionBenchmarks [shadowJar]" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.ZStandardTest.compress" />
-        <item itemvalue="Gradle.GorillaTest.compress" />
-        <item itemvalue="Gradle.DevOpsNamedDataPointExtractorTest.extract" />
-        <item itemvalue="Gradle.TimeseriesCompressionBenchmarks [run]" />
         <item itemvalue="Gradle.TimeseriesCompressionBenchmarks [shadowJar]" />
+        <item itemvalue="Gradle.DynatraceNamedDataPointExtractorTest.extract" />
+        <item itemvalue="Gradle.DynatraceNamedDataPointExtractorTest.extractNullDataPoint" />
+        <item itemvalue="Gradle.DevOpsNamedDataPointExtractorTest" />
+        <item itemvalue="Gradle.ZStandardTest.compress" />
       </list>
     </recent_temporary>
   </component>

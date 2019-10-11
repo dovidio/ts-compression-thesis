@@ -2,18 +2,21 @@ package com.dovidio.tsbenchmark.deserializer;
 
 import com.dovidio.tsbenchmark.NamedDataPoint;
 
+import java.util.Collections;
+import java.util.List;
+
 public class DynatraceNamedDataPointExtractor implements NamedDataPointExtractor {
 
     @Override
-    public NamedDataPoint extract(String string) {
+    public List<NamedDataPoint> extract(String string) {
         String[] parts = string.split(",");
         // Dynatrace return datapoint with null values for non existing values
         if (parts[2].equals("null")) {
-            return null;
+            return Collections.singletonList(null);
         }
         long timestamp = Long.parseLong(parts[1]);
         double value = Double.parseDouble(parts[2]);
 
-        return new NamedDataPoint(parts[0], timestamp, value);
+        return Collections.singletonList(new NamedDataPoint(parts[0], timestamp, value));
     }
 }

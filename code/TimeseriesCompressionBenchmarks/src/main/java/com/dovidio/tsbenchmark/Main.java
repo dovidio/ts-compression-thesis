@@ -7,6 +7,7 @@ import com.dovidio.tsbenchmark.compressor.*;
 import com.dovidio.tsbenchmark.deserializer.Deserializer;
 import com.dovidio.tsbenchmark.deserializer.DevOpsNamedDataPointExtractor;
 import com.dovidio.tsbenchmark.deserializer.DynatraceNamedDataPointExtractor;
+import com.dovidio.tsbenchmark.deserializer.TaxiNamedDataPointExtractor;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -36,7 +37,8 @@ public class Main {
                 deserializer = new Deserializer(new DynatraceNamedDataPointExtractor());
                 break;
             case "taxi":
-                System.exit(-1);
+                deserializer = new Deserializer(new TaxiNamedDataPointExtractor());
+                break;
             default:
                 String errorMessage = String.format("Unknown input data type: %s. Allowed input data type are Devops, Dynatrace, Taxi.\n", inputFileType);
                 throw new RuntimeException(errorMessage);
