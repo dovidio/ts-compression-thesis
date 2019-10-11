@@ -4,7 +4,8 @@ import pandas as pd
 # import dataset
 # contains compression performance data of 4 different compression algorithms:
 # deflate, gorilla, lz4 and zstandard
-df = pd.read_csv('devops_statistics.txt')
+# for different timeframes: 2 hours, 4 hours, 8 hours, 16 hours, 48 hours
+df = pd.read_csv('devops_statistics.csv')
 df.head()
 # check that we have the same amount of observations for each algorithm
 df['compression_method'].value_counts()
