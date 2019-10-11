@@ -3,9 +3,9 @@ const child_process = require('child_process');
 const dynatraceMetrics = require('./dynatraceMetrics').dynatraceMetrics;
 
 const compressionMethods = ['gorilla', 'deflate', 'lz4', 'zstandard'];
-const fileName = '../../data/dynatrace_statistics.txt';
+const fileName = '../../data/dynatrace_statistics.csv';
 
-fs.writeFileSync(fileName, 'host_id,initial_size,compressed_size,compression_ratio,compression_method,timeframe,datapoints_number\n');
+fs.writeFileSync(fileName, 'metric,initial_size,compressed_size,compression_ratio,compression_method,timeframe,datapoints_number\n');
 for (let method of compressionMethods) {
     for (let metric of dynatraceMetrics) {
         const currentFile = `../../data/dynatrace_${metric}.csv`;
