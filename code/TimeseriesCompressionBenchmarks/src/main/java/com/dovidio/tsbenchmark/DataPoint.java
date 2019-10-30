@@ -4,6 +4,9 @@ import fi.iki.yak.ts.compression.gorilla.Pair;
 
 import java.io.Serializable;
 
+/**
+ * Represent a single data point inside a {@link TimeSeries}
+ */
 public class DataPoint implements Serializable {
 
     private static final long serialVersionUID = 212312266622630L;
@@ -15,6 +18,11 @@ public class DataPoint implements Serializable {
         this.value = value;
     }
 
+    /**
+     * Utility method to convert a {@link Pair} to a {@link DataPoint}
+     * @param pair the pair to be converted
+     * @return a data point with the same value and timestamp as the pair
+     */
     public static DataPoint fromPair(Pair pair) {
         return new DataPoint(pair.getTimestamp(), pair.getDoubleValue());
     }

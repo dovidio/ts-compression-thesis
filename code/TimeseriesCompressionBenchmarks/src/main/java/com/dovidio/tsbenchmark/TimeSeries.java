@@ -2,14 +2,16 @@ package com.dovidio.tsbenchmark;
 
 import com.google.common.base.Objects;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Wrapper for a time series.
+ * For computing the amount of bytes required for a time series we serialize it.
+ */
 public class TimeSeries implements Serializable {
 
     private static final long serialVersionUID = 523054992266622630L;
-
     public final String name;
     public ArrayList<DataPoint> dataPoints;
 
