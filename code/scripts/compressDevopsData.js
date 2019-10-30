@@ -10,7 +10,7 @@ fs.writeFileSync(fileName, 'host_id,initial_size,compressed_size,compression_rat
 for (let method of compressionMethods) {
     for (let timeframe of compressionTimeframes) {
         for (let i = 0; i < 50; i++) {
-            const readStream = fs.createReadStream(`../../data/devops_${timeframe}h_60s_${i}.txt`);
+            const readStream = fs.createReadStream(`../../data/devops_${timeframe}h_60s_${i}.csv`);
             const cmd = `java -jar ../TimeseriesCompressionBenchmarks/build/libs/TimeseriesCompressionBenchmarks-all.jar devops ${method}`;
 
             readStream.on('open', () => {
