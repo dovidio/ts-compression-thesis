@@ -35,7 +35,8 @@ const args = {
 
 // create files
 for (let metric of dynatraceMetrics) {
-    fs.closeSync(fs.openSync(`../../data/dynatrace_${metric}.csv`, 'w'));
+    const fileName = metric.replace(':', '_');
+    fs.closeSync(fs.openSync(`../../data/dynatrace_${fileName}.csv`, 'w'));
 }
 
 // query dynatrace for each metric
@@ -51,7 +52,8 @@ function append(metric, data) {
         const dimensionName = s.dimensions[0];
         for (value of s.values) {
             const row = dimensionName + ',' + value.timestamp + ',' + value.value;
-            fs.appendFileSync(`../../data/dynatrace_${metric}.csv`, row + '\n');
+            const fileName = metric.replace(':', '_');
+            fs.appendFileSync(`../../data/dynatrace_${fileName}.csv`, row + '\n');
         }    
     }
 };
