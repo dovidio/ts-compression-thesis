@@ -1,5 +1,6 @@
 const fs = require('fs');
 const child_process = require('child_process');
+const countFileLines = require('./countFileLines').countFileLines;
 
 const compressionMethods = ['gorilla', 'deflate', 'lz4', 'zstandard'];
 const fileName = '../../data/taxi_statistics.csv';
@@ -20,12 +21,8 @@ for (let method of compressionMethods) {
                 process.exit(-1);
             }
 
-            // TODO: find solution that works only for windows
-            const number_of_data_points = child_process.spawnSync(`wc -l < ${currentFile}`, [], {shell: true});
-            if (number_of_data_points.error) {
-                console.log(number_of_data_points.error);
-            }
-
-            fs.appendFileSync(fileName, `${spawned.stdout},${method},2,${number_of_data_points.stdout}`);
+            countFileLines(currentFile).then(numberOfLines => {
+                fs.appendFileSync(fileName, `${spawned.stdout},${method},2,${numberOfLines}\n`);
+            });
         });
 }    

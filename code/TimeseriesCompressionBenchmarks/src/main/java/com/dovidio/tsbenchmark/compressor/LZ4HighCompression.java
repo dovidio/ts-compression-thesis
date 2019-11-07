@@ -9,13 +9,13 @@ import net.jpountz.lz4.LZ4SafeDecompressor;
 import java.util.Arrays;
 import java.util.List;
 
-public class LZ4HighCompression implements Compressor<Byte> {
+public class LZ4HighCompression implements LosslessCompressor<Byte> {
 
     LZ4Factory factory = LZ4Factory.fastestInstance();
 
     @Override
     public List<Byte> compress(TimeSeries timeSeries) {
-        byte[] data = CompressionUtils.toStream(timeSeries);
+        byte[] data = CompressionUtils.toByteArray(timeSeries);
         int initialDataLength = data.length;
 
         // Compresses the data

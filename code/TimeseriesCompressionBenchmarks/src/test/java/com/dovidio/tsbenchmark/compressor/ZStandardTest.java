@@ -20,7 +20,7 @@ public class ZStandardTest {
 
         List<Byte> compress = target.compress(timeSeries);
 
-        CompressedTimeSeries<Byte> byteCompressedTimeSeries = new CompressedTimeSeries<>(CompressionUtils.toStream(timeSeries).length, compress);
+        CompressedTimeSeries<Byte> byteCompressedTimeSeries = new CompressedTimeSeries<>(CompressionUtils.toByteArray(timeSeries).length, compress);
 
         TimeSeries name = target.restore("name", byteCompressedTimeSeries);
 

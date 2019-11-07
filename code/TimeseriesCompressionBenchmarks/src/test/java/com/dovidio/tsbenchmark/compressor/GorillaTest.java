@@ -21,7 +21,7 @@ public class GorillaTest {
 
         List<Long> compress = target.compress(timeSeries);
 
-        TimeSeries actual = target.restore("name", new CompressedTimeSeries(CompressionUtils.toStream(timeSeries).length, compress));
+        TimeSeries actual = target.restore("name", new CompressedTimeSeries(CompressionUtils.toByteArray(timeSeries).length, compress));
         Assert.assertEquals(timeSeries, actual);
     }
 

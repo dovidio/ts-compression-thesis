@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Gorilla implements Compressor<Long> {
+public class Gorilla implements LosslessCompressor<Long> {
 
     @Override
     public List<Long> compress(TimeSeries timeSeries) {

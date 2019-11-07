@@ -7,7 +7,7 @@
 import numpy as np
 import pandas as pd
 
-df = pd.read_csv('yellow_tripdata_2019-01.csv')
+df = pd.read_csv('../data/yellow_tripdata_2019-01.csv')
 # sort by pickup time
 df.sort_values(by=['tpep_pickup_datetime'], inplace=True)
 # drop values with pickup time before 1 january 2019

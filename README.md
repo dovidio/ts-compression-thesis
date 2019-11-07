@@ -82,4 +82,4 @@ a file with the compression stats will be generated under the data directory
 
 ## Data Analysis
 The files devops_data_analysis.py, dynatrace_data_analysis.py, taxi_data_analysis.py
-contain some interesting commands for data analysis that can be run in a jupyter notebook
+contain some interesting commands for data analysis. They will also generate figures to the folder thesis/figure.

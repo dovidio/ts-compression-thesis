@@ -19,7 +19,7 @@ public class Main {
     static Map<String, TimeSeries> timeSeriesHashMap;
 
     public static void main(String[] args) {
-        if (args.length != 2) {
+        if (args.length < 2) {
             System.out.println("Usage: TsBenchmark devops/dynatrace/taxi gorilla/lz4/deflate/zstandard");
             System.exit(-1);
         }
@@ -62,6 +62,9 @@ public class Main {
             case "zstandard":
                 compressor = new ZStandard();
                 break;
+            case "pmc_mr":
+                compressor = new PMC_MR_Compressor(parseError(args), parseInterval(args));
+                break;
             default:
                 String errorMessage = String.format("Unknown compression method: %s. Allowed compression methods are Gorilla, LZ4, Deflate, ZStandard.\n", compressionType);
                 throw new RuntimeException(errorMessage);
@@ -70,26 +73,55 @@ public class Main {
         compress(compressor);
     }
 
+    private static long parseInterval(String[] args) {
+        try {
+            return Long.parseLong(args[3]);
+        } catch (Exception e) {
+            throw new RuntimeException("please specify an interval in milliseconds for PMC_MR compression");
+        }
+    }
+
+    private static double parseError(String[] args) {
+        try {
+            return Double.parseDouble(args[2]);
+        } catch (Exception e) {
+            throw new RuntimeException("please specify an error bound for PMC_MR compression");
+        }
+    }
+
     static void compress(Compressor compressor) {
         int initialSizeInBytes = 0;
+        int initialNumberOfDataPoints = 0;
         long compressedSizeInBytes = 0;
-        HashMap<String, CompressedTimeSeries> compressedTimeSeriesMap = new HashMap<>(timeSeriesHashMap.size());
-
+        // compress and keep track of byte size
         for (TimeSeries timeSeries : timeSeriesHashMap.values()) {
-            initialSizeInBytes += CompressionUtils.toStream(timeSeries).length;
+            int currentTimeSeriesByteSize = CompressionUtils.toByteArray(timeSeries).length;
+            initialSizeInBytes += currentTimeSeriesByteSize;
+            initialNumberOfDataPoints += timeSeries.dataPoints.size();
             List<Object> compressedValues = compressor.compress(timeSeries);
-            CompressedTimeSeries compressedTimeSeries = new CompressedTimeSeries(CompressionUtils.toStream(timeSeries).length, compressedValues);
-            compressedTimeSeriesMap.put(timeSeries.name, compressedTimeSeries);
+            CompressedTimeSeries compressedTimeSeries = new CompressedTimeSeries(currentTimeSeriesByteSize, compressedValues);
             compressedSizeInBytes += compressedTimeSeries.byteSize();
-        }
 
-        for (Map.Entry<String, CompressedTimeSeries> t : compressedTimeSeriesMap.entrySet()) {
-            TimeSeries restored = compressor.restore(t.getKey(), t.getValue());
-            if (!Objects.equals(timeSeriesHashMap.get(restored.name), restored)) {
-                throw new RuntimeException(String.format("Could not restore compressed value of timeseries %s with compressor %s", restored.name, compressor.getClass().getSimpleName()));
+            if (compressor instanceof LosslessCompressor) {
+                // lossless compression algorithms
+                // let's verify we can restore the timeseries
+                TimeSeries restored = ((LosslessCompressor) compressor).restore(timeSeries.name, compressedTimeSeries);
+                if (!Objects.equals(timeSeries, restored)) {
+                    throw new RuntimeException(String.format("Could not restore compressed value of timeseries %s with compressor %s", restored.name, compressor.getClass().getSimpleName()));
+                }
             }
+
+            // remove initial timeseries from memory, it's not needed anymore
+            timeSeriesHashMap.put(timeSeries.name, null);
         }
 
-        System.out.printf(Locale.US, "%d,%d,%e", initialSizeInBytes, compressedSizeInBytes, (initialSizeInBytes / (double) compressedSizeInBytes));
+        if (compressor instanceof LosslessCompressor) {
+            // output initial size in byte, compressed size in byte and compression ratio
+            System.out.printf(Locale.US, "%d,%d,%e", initialSizeInBytes, compressedSizeInBytes, (initialSizeInBytes / (double) compressedSizeInBytes));
+        } else {
+            // lossy compression algorithms
+            // output number of initial data points and number of segments
+            System.out.printf(Locale.US, "%d,%d,%e", initialNumberOfDataPoints, compressedSizeInBytes, (initialNumberOfDataPoints / (double) compressedSizeInBytes));
+        }
     }
 }

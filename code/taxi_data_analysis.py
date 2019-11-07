@@ -10,6 +10,10 @@ df = pd.read_csv('../data/taxi_statistics.csv')
 # check that we have the same amount of observations for each algorithm
 df['compression_method'].value_counts()
 
+# mean and std for compression methods
+print(df.groupby(['compression_method']).mean()['compression_ratio'])
+print(df.groupby(['compression_method']).std()['compression_ratio'])
+
 # group by compression method and timeframe and get means
 groupedMeans = df.groupby(['compression_method']).mean()['compression_ratio']
 rcParams.update({'figure.autolayout': True})

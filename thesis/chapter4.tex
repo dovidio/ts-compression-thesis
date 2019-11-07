@@ -83,11 +83,11 @@ For LZ4 and ZStandard we have used open source implementations \cite{lz4_2019_lz
 \section{Results}
 \subsection{Generated data}
 Figure~\ref{devops_lossless_compression} illustrates the result of applying different compression algorithms
-with generated data. It clearly shows how Gorilla (mean = 13.349707, standard deviation = 1.597951), is outperforming the other
+with generated data. It clearly shows how Gorilla (mean = 13.35, standard deviation = 1.60), is outperforming the other
 lossless compression algorithms.
-It is also interesting to notice how ZStandard (mean = 3.580531, standard deviation = 0.319150) and Deflate
-(mean = 3.224456, standard deviation = 0.240666)
-performs similarly, while LZ4 (mean = 2.364515, standard deviation = 0.135801) has
+It is also interesting to notice how ZStandard (mean = 3.58, standard deviation = 0.32) and Deflate
+(mean = 3.22, standard deviation = 0.24)
+performs similarly, while LZ4 (mean = 2.36, standard deviation = 0.14) has
 consistently the worst compression ratio, as one might have predicted given that it was engineered to optimize compression speed rather
 than compression ratio.
 
@@ -103,7 +103,19 @@ Higher values indicates higher compression ratios.}
 \subsection{Dynatrace Data}
 Results of the different compression algorithms applied to real-word series data are shown in
 Figure~\ref{dynatrace_compression}. The results are similar to what we have seen for generated data,
-with Gorilla outperforming general purposes algorithm across all metrics.
+with Gorilla (mean = 3.40, standard deviation = 0.10) outperforming all the other general purposes algorithm across all metrics.
+As we also saw in the previous benchmark, deflate (mean = 2.16, standard deviation = 0.34) and zstandard (mean = 2.15, standard deviation = 0.42)
+have a similar performance, which is significantly better than LZ4 (mean = 1.77, standard deviation = 0.19).
+It is interesting to notice that although Gorilla provides the best compression here, it is much lower as compared to the compression achieved with generated data.
+By having a closer look at both sources of data, we hypothesized that this is because the generated data contains repeated consecutive values
+much more often as compared to real-world data. Gorilla is optimized to reduce the storage need for this particular case, and this
+alone would explain the big difference.
+Indeed a closer inspection reveals that the percentage of repeated values in the case of generated data is $41\%$, while in the case
+of real-world data is $0.76\%$.
+This happens because most values were generated using a random walk distribution which results in a high correlation between the values. Moreover, most of the generated
+values are integers. One interesting thing we have also noted is that the time series benchmark tool is that it tends to create more values when the timeframe is larger.
+When it comes to data gathered by Dynatrace, all the values are represented as floating-point values. Although the delta between the values tend to be small most of
+the time, the chances of getting the same value in a sequence are much smaller with high-resolution real data.  
 
 \begin{figure}[!htbp]
 \begin{center}
@@ -121,9 +133,12 @@ ordered by pick up time.
 Each time series data point represent a specific value for a specific taxi trip.
 The time interval between each data point is not regular as in the previous data sets, for this
 reason Gorilla delta of delta timestamp compression is likely to not yield good compression
-ratios.
-As Figure~\ref{taxi_bar_chart} shows, Gorilla compression does not perform well for this use case.
-Its performance is on par with LZ4, while both Deflate and ZStandard achieve better compression ratio.
+ratios. Moreover since there is no correlation between taxi trips, XOR compression of float will
+not be effective.
+Having a look at the results in Figure~\ref{taxi_bar_chart}, we can see that indeed Gorilla compression does not perform well as
+in the other benchmarks. The best compression algorithms in this case are deflate (achieving a compression
+ratio of 6.78) and zstandard (achieving a compression ratio of 6.70). Gorilla performs slightly
+better than LZ4 (4.80 vs 4.11).
 
 \begin{figure}[!htbp]
 \begin{center}
@@ -133,3 +148,13 @@ Higher values indicates higher compression ratios.}
 \label{taxi_bar_chart}
 \end{center}
 \end{figure}
+
+\subsection{Discussion}
+From our limited results, it is hard to say which compression algorithm is the best for time-series data.
+Although Gorilla seems to allow for greater compression ratios for DevOps data, this is not the case when
+time-series data has no correlation, and when the interval between data points is irregular.
+Deflate and ZStandard offers good compression ratios and they have the advantage to have many stable and
+optimized implementations.
+LZ4 performed consistently worse than the other algorithms in each of the benchmarks, but might be chosen
+for those applications where compression and decompression speed are important.
+

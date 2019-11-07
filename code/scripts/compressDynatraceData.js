@@ -1,10 +1,10 @@
 const fs = require('fs');
 const child_process = require('child_process');
 const dynatraceMetrics = require('./dynatraceMetrics').dynatraceMetrics;
+const countFileLines = require('./countFileLines').countFileLines;
 
 const compressionMethods = ['gorilla', 'deflate', 'lz4', 'zstandard'];
 const fileName = '../../data/dynatrace_statistics.csv';
-const LINE_FEED = '\n'.charCodeAt(0);
 
 fs.writeFileSync(fileName, 'metric,initial_size,compressed_size,compression_ratio,compression_method,timeframe,datapoints_number\n');
 for (let method of compressionMethods) {
@@ -29,21 +29,4 @@ for (let method of compressionMethods) {
             });
         });
     }
-}    
-
-function countFileLines(filePath) {
-    return new Promise((resolve, reject) => {
-    let lineCount = 0;
-    fs.createReadStream(filePath)
-      .on("data", (buffer) => {
-        let idx = -1;
-        lineCount--; // Because the loop will run once for idx=-1
-        do {
-          idx = buffer.indexOf(LINE_FEED, idx+1);
-          lineCount++;
-        } while (idx !== -1);
-      }).on("end", () => {
-        resolve(lineCount);
-      }).on("error", reject);
-    });
-  };
+}

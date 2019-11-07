@@ -9,11 +9,11 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-public class Deflate implements Compressor<Byte> {
+public class Deflate implements LosslessCompressor<Byte> {
 
     @Override
     public List<Byte> compress(TimeSeries timeSeries) {
-        byte[] data = CompressionUtils.toStream(timeSeries);
+        byte[] data = CompressionUtils.toByteArray(timeSeries);
         byte[] compressed = new byte[data.length];
 
         Deflater compressor = new Deflater();

@@ -8,18 +8,18 @@ import java.util.ArrayList;
 @SuppressWarnings("unchecked")
 public class CompressionUtils {
 
-    public static byte[] toStream(TimeSeries timeSeries) {
-        byte[] stream = null;
+    public static byte[] toByteArray(TimeSeries timeSeries) {
+        byte[] byteArray;
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
             objectOutputStream.writeObject(timeSeries.dataPoints);
 
-            stream = byteArrayOutputStream.toByteArray();
+            byteArray = byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        return stream;
+        return byteArray;
     }
 
     public static TimeSeries toTimeSeries(String timeSeriesName, byte[] stream) {

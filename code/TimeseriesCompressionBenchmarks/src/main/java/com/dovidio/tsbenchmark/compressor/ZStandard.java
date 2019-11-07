@@ -6,12 +6,12 @@ import com.github.luben.zstd.Zstd;
 
 import java.util.List;
 
-public class ZStandard implements Compressor<Byte> {
+public class ZStandard implements LosslessCompressor<Byte> {
     Zstd zstd = new Zstd();
 
     @Override
     public List<Byte> compress(TimeSeries timeSeries) {
-        byte[] data = CompressionUtils.toStream(timeSeries);
+        byte[] data = CompressionUtils.toByteArray(timeSeries);
 
         // Compresses the data
         return toBytesBoxedList(zstd.compress(data));

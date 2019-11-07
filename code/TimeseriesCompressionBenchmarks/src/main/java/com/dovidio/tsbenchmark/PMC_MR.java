@@ -6,8 +6,8 @@ import java.util.List;
 
 public class PMC_MR implements Iterable<DataPoint> {
 
-    private final float error;
-    private final List<PMC_MRSegment> segmentList;
+    private final double error;
+    public final List<PMC_MRSegment> segmentList;
     private final long interval;
     private final long firstTimestamp;
     private double max;
@@ -15,7 +15,12 @@ public class PMC_MR implements Iterable<DataPoint> {
     private int repetitions;
     private int totalValues;
 
-    PMC_MR(float error, long firstTimestamp, long interval) {
+    /**
+     * @param error          error percentage. 1 stands for 100 percent error
+     * @param firstTimestamp first timestamp of the series, in milliseconds
+     * @param interval       interval between each datapoint, in milliseconds
+     */
+    public PMC_MR(double error, long firstTimestamp, long interval) {
         this.error = error;
         this.max = Double.NEGATIVE_INFINITY;
         this.min = Double.POSITIVE_INFINITY;
@@ -26,7 +31,7 @@ public class PMC_MR implements Iterable<DataPoint> {
         segmentList = new ArrayList<>(256);
     }
 
-    void addValue(double value) {
+    public void addValue(double value) {
         double currentMax = Math.max(value, this.max);
         double currentMin = Math.min(value, this.min);
         double approximation = (currentMax + currentMin) / 2.0;
@@ -47,7 +52,7 @@ public class PMC_MR implements Iterable<DataPoint> {
         totalValues++;
     }
 
-    void finish() {
+    public void finish() {
         double approximation = (max + min) / 2;
         PMC_MRSegment segment = new PMC_MRSegment(approximation, repetitions);
         segmentList.add(segment);
@@ -70,7 +75,7 @@ public class PMC_MR implements Iterable<DataPoint> {
 
             @Override
             public boolean hasNext() {
-                return index < totalValues - 1;
+                return index < totalValues;
             }
 
             @Override
@@ -87,7 +92,23 @@ public class PMC_MR implements Iterable<DataPoint> {
         };
     }
 
-    private static class PMC_MRSegment {
+    List<DataPoint> toDatapointList() {
+        List<DataPoint> dataPoints = new ArrayList<>();
+        int numberOfPreviousDataPoints = 0;
+
+        for (int segmentIndex = 0; segmentIndex < segmentList.size(); segmentIndex++) {
+            PMC_MRSegment segment = segmentList.get(segmentIndex);
+            for (int i = 0; i < segment.repetitions; i++) {
+                long timestamp = firstTimestamp + interval * numberOfPreviousDataPoints++;
+                DataPoint d = new DataPoint(timestamp, segment.value);
+                dataPoints.add(d);
+            }
+        }
+
+        return dataPoints;
+    }
+
+    public static class PMC_MRSegment {
         private final double value;
         private final int repetitions;
 
