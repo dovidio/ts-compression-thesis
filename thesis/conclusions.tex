@@ -1,0 +1,13 @@
+\chapter*{Conclusions}
+This thesis aimed to identify the principal approaches and algorithms for time-series data compression.
+We have identified four main approaches that are used in real-world applications and databases.
+We then created a benchmark to evaluate how Gorilla, an algorithm specifically tailored for infrastructure
+monitoring time-series data, performs against state of the art general purposes algorithms. 
+These benchmark clearly illustrates how Gorilla can outperform the general purposes algorithm, but it
+also shows how this is highly dependent on the correlation between values in the time series.
+Based on these results, it is vital to understand the type of data one is dealing with. Our benchmarks
+showed that the best results are obtained with time-series data sets whereby the same values are repeated
+in neighboring data points. Future research should consider the speed of compression and decompression of
+these algorithms. This might be interesting especially when dealing with database queries. On the one hand,
+having less data stored might speed up the queries. On the other hand, decompression speed should also
+be taken into account.
