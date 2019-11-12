@@ -89,7 +89,7 @@ compression achieved by Gorilla with Facebook’s data. It is interesting to not
 \begin{center}
 \includegraphics[width=300pt]{gorillaTimestamp}
 \caption[gorilla_timestamp]{ Distribution of timestamp compression across different ranged buckets.
-Taken from a sample of 440,000 real timestamps in Gorilla \cite{Pelkonen2015Gorilla}}
+Taken from a sample of 440,000 real timestamps in Gorilla \cite{Pelkonen:2015}}
 \label{gorilla_timestamp}
 \end{center}
 \end{figure}
@@ -142,7 +142,7 @@ due to the 13 bits extra overhead.
 
 \subsection{Sprintz}
 Sprintz is a compression algorithm that is specifically tailored for Internet of Things (IoT)
-devices \cite{Blalock2018Sprintz}. These devices have low power consumption and computational limits. Sprintz
+devices \cite{blalock2018sprintz}. These devices have low power consumption and computational limits. Sprintz
 reduces the amount of data sent over the network while still being efficient enough to be
 run on low powered devices. The design requirements of Sprintz were the following:
 \begin{itemize}
@@ -163,7 +163,7 @@ each record consists of multiple values. Each value is associated with a dimensi
 contrasts with univariate time series, whereby there is only one dimension.
 
 \subsubsection{Sprintz components}
-Sprintz can be described as a bit packing-based predictive coder \cite{Blalock2018Sprintz}.
+Sprintz can be described as a bit packing-based predictive coder \cite{blalock2018sprintz}.
 It consists of four components:
 \begin{itemize}
     \item An online forecaster, that predict the next value in the time series. Sprintz
@@ -180,7 +180,7 @@ It consists of four components:
 The basic algorithm is outlined in the following pseudo-code listing:
 
 \begin{algorithm}[]
-\caption{Sprintz encoding algorithm \cite{Blalock2018Sprintz}}\label{sprintz_encoding}
+\caption{Sprintz encoding algorithm \cite{blalock2018sprintz}}\label{sprintz_encoding}
 \begin{algorithmic}[1]
 \Procedure{encodeBlock}{$\{x_1, \ldots, x_b\}$, forecaster}
 \State{Let buff be a temporary buffer}
@@ -231,7 +231,7 @@ the error value, which is present in the payload. The value will be the predicte
 the error value. The forecaster is then updated with the current parameters.
 
 \begin{algorithm}[]
-\caption{Sprintz decoding algorithm \cite{Blalock2018Sprintz}}\label{sprintz_decoding}
+\caption{Sprintz decoding algorithm \cite{blalock2018sprintz}}\label{sprintz_decoding}
 \begin{algorithmic}[1]
 \Procedure{decodeBlock}{bytes, $B, D$, forecaster}
 \State{nbits, payload $ \leftarrow $ huffmanDecode(bytes, $B$, $D$) }
@@ -257,10 +257,10 @@ the error value. The forecaster is then updated with the current parameters.
 \subsubsection{The forecaster}
 Sprintz uses a novel forecaster algorithm called FIRE (Fast Integer REgression). It is
 slightly slower than delta encoding but yields a better compression ratio most of the time
-\cite{Blalock2018Sprintz}. Each value is thought of as a linear combination of a fixed amount
+\cite{blalock2018sprintz}. Each value is thought of as a linear combination of a fixed amount
 of previous values plus some error. The details of the forecaster are outside the scope of
 this thesis, but the interested reader can find more in the original paper
-\cite{Blalock2018Sprintz}.
+\cite{blalock2018sprintz}.
 
 \subsubsection{Bit packing}
 Explaining bit packing will be easier by using a practical example. Suppose we want to encode
@@ -372,20 +372,20 @@ quality guarantees.
 
 \subsection{Piecewise Constant Approximation}
 Piecewise constant approximation represents a time series S as a sequence of K segments
-\cite{Keogh2001Locally}\cite{Lazaridis2003Capturing}:
+\cite{keogh2001locally}\cite{lazaridis2003capturing}:
 $$PCA(S^n) = \langle(c_1, e_1), (c_2, e_2), \ldots, (c_k, e_k))\rangle$$
 where $e_k$  is the end-point of a segment and $c_k$ is a constant value for time in
 $[e_{k-1} + 1, e_k]$ or for time in $[1, e_1]$ for the first segment. If each segment
 corresponds to many samples of the series, then high compression ratios can be achieved.
-In \cite{Lazaridis2003Capturing}, a simple algorithm name Poor Man’s Compression -
+In \cite{lazaridis2003capturing}, a simple algorithm name Poor Man’s Compression -
 Midrange (PMC-MR) was proposed to construct a PCA  representation of a series with
 $O(1)$ space requirements and $O(n)$ time complexity, where $n$ is the number of samples
 in a series. This algorithm does also take into consideration quality guarantees, that
 is, users can decide the maximum acceptable quality loss the algorithm will produce.
-Algorithm~\ref{PMC_MR} lists the procedure taken from \cite{Lazaridis2003Capturing}.
+Algorithm~\ref{PMC_MR} lists the procedure taken from \cite{lazaridis2003capturing}.
 
 \begin{algorithm}
-\caption{Poor Man's Compression Midrange \cite{Lazaridis2003Capturing}}\label{PMC_MR}
+\caption{Poor Man's Compression Midrange \cite{lazaridis2003capturing}}\label{PMC_MR}
 \begin{algorithmic}[1]
 \Procedure{pcr}{series, tolerance}
 \State{PCA(series) $ \leftarrow $ $\langle \rangle$ }
@@ -437,7 +437,7 @@ approximating multiple values with a single constant value, we approximate a tim
 S with k straight lines. Algorithm~\ref{PLA} is one popular algorithm that produces a PLA.
 
 \begin{algorithm}
-\caption{Online Piecewise Linear Approximation \cite{Lazaridis2003Capturing}}\label{PLA}
+\caption{Online Piecewise Linear Approximation \cite{lazaridis2003capturing}}\label{PLA}
 \begin{algorithmic}[1]
 \Procedure{pla}{series, tolerance}
 \State{PLA(series) $ \leftarrow $ $\langle \rangle$ }
@@ -463,14 +463,14 @@ within the tolerance value defined.
 When this condition is satisfied, the index $i$ is increased. If that is not the case,
 then the segment from anchor to anchor + $i - 1$ is appended to the PLA(series)
 and the anchor variable is updated. The approximation can be improved by using other variations.
-Most of them are batch algorithms \cite{Douglas1973Algorithms}\cite{Park1999Fast}
-\cite{Keogh1998An}, but some online alternatives have been
-proposed as well \cite{Keogh2001An}.
+Most of them are batch algorithms \cite{douglas1973algorithms}\cite{park1999fast}
+\cite{keogh1998enhanced}, but some online alternatives have been
+proposed as well \cite{keogh2001online}.
 
 \subsection{ModelarDB}
 ModelarDB is a time-series database management system that was designed to store and query
 massive amounts of high-quality sensor data ingested in real-time from many sensors
-\cite{jensen_2018_modelardb}.
+\cite{jensen2018modelardb}.
 To tackle these problems, model-based compression was used. Model-based compression is a
 lossy compression technique that stores a representation that can recreate data within a
 known error bound. For example, PLA is a type of model-based compression, using linear
@@ -498,12 +498,12 @@ The pseudo-code is listed in Algorithm~\ref{alg_modelar}.
 \begin{figure}
 \begin{center}
 \includegraphics[width=400pt]{modelar}
-\caption[modelar]{A depiction of the ModelarDB compression algorithm, taken from \cite{jensen_2018_modelardb}}
+\caption[modelar]{A depiction of the ModelarDB compression algorithm, taken from \cite{jensen2018modelardb}}
 \label{modelar}
 \end{center}
 \end{figure}
 \begin{algorithm}
-\caption{Online model-agnostic compression algorithm \cite{jensen_2018_modelardb}}\label{alg_modelar}
+\caption{Online model-agnostic compression algorithm \cite{jensen2018modelardb}}\label{alg_modelar}
 \begin{algorithmic}[1]
 \Procedure{modelarDB}{series, tolerance}
 \State{Let series be the time series of data points}
@@ -568,7 +568,7 @@ compression. We will finish with ZStandard, an open-source Deflate alternative.
 
 \subsection{LZ4}
 LZ4 is a lossless compression algorithm focused on compression and decompression speed
-based on LZ77 \cite{Ziv1977A}\cite{lz42019lz4lz4}. As LZ77, LZ4 uses a sliding windows
+based on LZ77 \cite{ziv1977universal}\cite{lz42019lz4lz4}. As LZ77, LZ4 uses a sliding windows
 consisting of a search buffer and a look-ahead buffer. Repetitive data is replaced with
 an index to the search buffer. An LZ4 compressed block is composed of sequences.
 A sequence consists of a token, literal length, offset and matched length, as

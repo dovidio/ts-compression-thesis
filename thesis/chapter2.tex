@@ -27,7 +27,7 @@ Since the timestamps were collected roughly every minute, the delta is always ar
 while the delta of the delta is always around 0. By storing the delta of deltas together with
 an appropriate variable length code (described in the following section), one can reduce the
 amount of storage needed as compared to storing the timestamps.
-This technique is used in Gorilla \cite{Pelkonen2015Gorilla}, a time series database created
+This technique is used in Gorilla \cite{Pelkonen:2015}, a time series database created
 by Facebook to monitor their infrastructure, which we will analyze in chapter 3.
 
 \begin{table}[]
@@ -52,7 +52,7 @@ that occur less frequently with longer codes. The result is a long string of bit
 separators between the codes of consecutive symbols. The decoder should be able to read this
 string unambiguously into individual codes. Such codes are called "prefix codes"  in
 Information Theory.
-One example of a prefix code is Elias’ Gamma Code \cite{Elias1975Universal}. This code, designed for positive
+One example of a prefix code is Elias’ Gamma Code \cite{elias1975universal}. This code, designed for positive
 integers, prefix each integer with a representation of its order of magnitude. Given a
 positive integer $n$, proceed as follows:
 \begin{itemize}
@@ -121,7 +121,7 @@ $(1, 10), (0, 5), (1, 10)$ is the short form the following sequence of values:
 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.
 In many applications where changes in data are rare this leads to good compression ratios;
 on the contrary, if the data changes frequently using RLE results in expansion. In the
-following chapter, we will talk about Sprintz \cite{Blalock2018Sprintz},
+following chapter, we will talk about Sprintz \cite{blalock2018sprintz},
 an algorithm designed to compress sensor-generated time series data, which uses, among other
 techniques, run-length encoding.
 
@@ -132,7 +132,7 @@ entry instead of storing the words again. The same idea can be extended to non-t
 example, we consider a sequence of numbers as an entry in our dictionary. Every time the
 sequence is repeated, we can store a reference to it.
 The entire field of dictionary-based compression was initiated with the algorithm published
-in a seminal paper by Ziv and Lempel in 1977, commonly referred to as LZ77 \cite{Ziv1977A}.
+in a seminal paper by Ziv and Lempel in 1977, commonly referred to as LZ77 \cite{ziv1977universal}.
 LZ77 is based on the concept of a sliding window. The window is divided into a search buffer
 and a look-ahead buffer. The search buffer contains the dictionary and the data that has been
 recently processed. The input that has not been read and encoded yet resides in the look-ahead
