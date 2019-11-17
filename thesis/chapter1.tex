@@ -13,7 +13,7 @@
 
 \section{What is time series data?}
 Time series data can be thought of as a series of data points, measuring a certain variable
-over time, stored in time order. Time Series datasets most commonly share three
+over time, stored in time order. Time series datasets most commonly share three
 characteristics \cite{AjayKulkarni2018What} :
 \begin{itemize}
 	\item Data points are almost always stored as a new record
@@ -22,9 +22,8 @@ characteristics \cite{AjayKulkarni2018What} :
 \end{itemize}
 
 For example, let us consider the S\&P 500, a stock market index based on the market
-capitalization of the largest 500 companies in the USA. We can collect valuable information
-during a given time interval. For example, we could be interested in the high, low and closing
-price on a daily basis. The dataset is illustrated in Figure~\ref{sp500}.
+capitalization of the largest 500 companies in the USA. We are interested in collecting the high, low and
+closing price on a daily basis. The resulting data set is illustrated in Figure~\ref{sp500}.
 
 \begin{figure}
 \begin{center}
@@ -110,7 +109,7 @@ We can identify four different approaches for compressing time series data.
 	\item \textbf{Lossy compression. }Many applications are concerned with the trends that
 	can be extracted from time series data, and do not require a high level of accuracy. For
 	this type of applications, lossy compression can be considered, which usually results in
-	much better compression rates as compared to lossless algorithms.
+	much better compression rates as compared to lossless compression.
 	\item \textbf{General-purpose algorithms}. Some time series databases do not offer
 	compression out of the box. In these cases, one can consider running the databases on
 	ZFS or other file systems that offer data compression \cite{A2019TimescaleDB}. Other
