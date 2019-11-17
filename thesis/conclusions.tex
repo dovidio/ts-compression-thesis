@@ -1,13 +1,27 @@
 \chapter*{Conclusions}
-This thesis aimed to identify the principal approaches and algorithms for time-series data compression.
+This thesis aimed to identify the principal approaches and algorithms for time series data compression.
 We have identified four main approaches that are used in real-world applications and databases.
-We then created a benchmark to evaluate how Gorilla, an algorithm specifically tailored for infrastructure
-monitoring time-series data, performs against state of the art general purposes algorithms. 
+We then focused on lossless compression algorithms by creating benchmarks to evaluate how Gorilla,
+an algorithm specifically tailored for infrastructure monitoring time series data, performs against
+state of the art general purposes algorithms. 
 These benchmark clearly illustrates how Gorilla can outperform the general purposes algorithm, but it
 also shows how this is highly dependent on the correlation between values in the time series.
-Based on these results, it is vital to understand the type of data one is dealing with. Our benchmarks
-showed that the best results are obtained with time-series data sets whereby the same values are repeated
-in neighboring data points. Future research should consider the speed of compression and decompression of
-these algorithms. This might be interesting especially when dealing with database queries. On the one hand,
-having less data stored might speed up the queries. On the other hand, decompression speed should also
-be taken into account.
+Based on these results, we suggest to first analyze which kind of data one is dealing with before choosing
+a compression algorithm. Our benchmarks showed that the best results are obtained with time series data sets whereby the same values are repeated
+in neighboring data points.
+We should note that Gorilla compression deals only with univariate time series, and this can limit
+its usefulness. In the monitoring, we usually have different metrics collected for the
+same entity at regular intervals. As an example, we could measure disk space, CPU usage and memory usage
+for and store them as a multivariate time series. Gorilla would require us to split this time series into
+three different univariate time series, thus causing the same timestamps to be repeated three times.
+Adding some sort of bit packing, as Sprintz does, would allow us to use Gorilla also for multivariate time series.
+One limit of our benchmarks is that we did not consider compression and compression speed
+This might be interesting especially when dealing with database queries and inserts. On the one hand,
+data compression increases the information density of transferred data, thus
+improving disk bandwidth. On the other hand, the decompression overhead might outweigh the potential
+benefits of compression.
+In summary, this thesis provides an overview of the problem of time series compression and offers some insights
+into the compression performance of Gorilla and other general purposes lossless algorithms. Future research should expand
+on these findings by including other compression algorithms and by taking account compression and
+decompression speed.
+
