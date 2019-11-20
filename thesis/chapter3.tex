@@ -1,3 +1,7 @@
+%!TEX TS-program = pdflatex
+%!TEX root = tesi.tex
+%!TEX encoding = UTF-8 Unicode
+
 \chapter{Approaches to Time Series compression}
 \section{Storing aggregates}
 Storing aggregates is probably the most common approach to deal with large time series.
@@ -216,7 +220,7 @@ of bits needed for representing the max value is computed for each column. If al
 dimensions had a 0 error, new blocks are read until an error is found.
 Run-length encoding is then used to encode the 0 errors (line 17-19). The header is written
 as zeros repeated for the number of dimensions. The payload consists of the number of zero
-blocks found. Header and payload are then further compressed using Huffman code. 
+blocks found. Header and payload are then further compressed using the Huffman code. 
 If non-zeroes errors were found, then the header will include a header containing the bit
 width of each dimension. The values are then packed in the payload. Header and payload are
 then encoded using Huffman encoding.
@@ -409,7 +413,7 @@ Algorithm~\ref{PMC_MR} lists the procedure taken from \cite{lazaridis2003capturi
 \end{algorithmic}
 \end{algorithm}
 
-The procedure uses $n$ to represent the endpoint of the segment, and represents the
+The procedure uses $n$ to represent the endpoint of the segment and represents the
 minimum and maximum values found in the segment not yet pushed to the PCA with $m$ and
 $M$. In each cycle, we evaluate whether the range we are considering is no more than
 twice the quality boundary. If that is the case, we update $m$ and $N$. Once the current
@@ -458,7 +462,7 @@ This algorithm resembles PMC-MR, in that it grows a segment until it can fit the
 max error. The algorithm keeps track of two variables: anchor, which define the start index
 of a potential segment, and $i$, which defines the end of the segment. It appends the generated
 segments to PLA, a variable referencing a list.  In line 6-7 it checks
-whether the segment from anchor to anchor + $i$ is able to represents the original values
+whether the segment from anchor to anchor + $i$ can represent the original values
 within the tolerance value defined.
 When this condition is satisfied, the index $i$ is increased. If that is not the case,
 then the segment from anchor to anchor + $i - 1$ is appended to the PLA(series)
@@ -481,7 +485,7 @@ Users can extend the system with their own compression models.
 \subsubsection{Model-Agnostic Compression Algorithm}
 ModelarDB uses a model agnostic compression algorithm so that users can extend the set of
 compression models. Data is stored as segments, where each segment stores multiple data
-points and can use a different model. In order to satisfy latency constraints, two types
+points and can use a different model. To satisfy latency constraints, two types
 of segments are used, namely a temporary segment (ST) and a finalized segment (SF).
 The STs are emitted based on a user-defined latency in terms of data points not yet
 emitted to the stream, while SFs are emitted when a new data point cannot be represented
@@ -597,22 +601,22 @@ The four least significant bits of the token indicates the match length. As with
 length of the literal, this number has no limitations and can be expanded by adding new
 bytes to the match length section of the block.
 Following the token and the length of the optional literal, we have the literals part of
-the block. It is possible that this part is skipped (this happens when the word is
+the block. This part may be skipped (this happens when the word is
 entirely matched in the dictionary).
 The offset is composed of two bytes, and it represents the offset from the position where
 the match begins.
 Let us make a practical example. Suppose that during the LZ4 compression we have the following
 binary string in our search buffer
 $$S = 00001111000011110101$$
-We want to compress the following string by refering the search buffer:
+We want to compress the following string by referring the search buffer:
 $$S' = 0011110000111101011111$$
 We notice that the first 18 bits are identical to the last 18 bits in the search buffer. Thus
 we will only need to include the last 4 bits in the literals section of the block.
 We already know how the token byte will look like: 0100$|$1111. The first 4 bits indicate that
 we have a 4 bits literal length. The last 4 bits indicate that we have a match bigger than
 15 bits, therefore we need to check for additional bytes in the match length part of the block.
-Since the literals length is $< 15$, we do not need any literals length additional bytes.
-Next we can encode the literals as 1111. We then need to encode the offset, which is 18.
+Since the length of the literal is $< 15$, we do not need any literals length additional bytes.
+Next, we can encode the literals as 1111. We then need to encode the offset, which is 18.
 So far we have the following bits: $01001111 1111 00000000 00010010$.
 The last part is to include an additional match length byte, to obtain 18 bits of matched
 length. This last byte will encode 3 (we must sum the 15 bits of the token to obtain 18).
@@ -651,7 +655,7 @@ the standard Huffman tree:
     \item elements with the same length are ordered lexicographically
 \end{itemize}
 The reason why these two restrictions are placed upon trees, is that with these restrictions
-for a given set of elements and their respective length there is only one possible tree.
+for a given set of elements and their respective length, there is only one possible tree.
 When using mode 3, the Huffman codes for the two alphabets must be included. Deflate has
 many implementations that differ in some minor details. The most popular are zip, gzip, and
 zlib.
@@ -666,8 +670,8 @@ this thesis, but the interested reader can find more information in \cite{Collet
 \cite{ColletY2014FSE}.
 ZStandard is a versatile compression algorithm, suitable for usage in widely
 different circumstances. It is faster both in compression and decompression
-speed as compared to zlib, while achieving similar compression ratios \cite{ColletY2018Smaller}.
-ZStandard offers also a specific training mod, which can be used to tune the algorithm for a selected
-type of data. The result of the training is stored in a dictionary which will be loaded before compression
+speed as compared to Zlib while achieving similar compression ratios \cite{ColletY2018Smaller}.
+ZStandard offers also a specific training mode, which can be used to tune the algorithm for a selected
+type of data. The result of the training is stored in a dictionary that will be loaded before compression
 and decompression. This can be an interesting use case for compressing
 JSON data returned by web services \cite{ColletY2018Smaller}.
