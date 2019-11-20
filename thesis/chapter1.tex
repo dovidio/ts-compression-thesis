@@ -16,9 +16,9 @@ Time series data can be thought of as a series of data points, measuring a certa
 over time, stored in time order. Time series datasets most commonly share three
 characteristics \cite{AjayKulkarni2018What} :
 \begin{itemize}
-	\item Data points are almost always stored as a new record
-	\item Data typically arrive in time order
-	\item Time is the most important feature of time series data and is a key attribute that distinguishes it from other data
+    \item Data points are almost always stored as a new record
+    \item Data typically arrive in time order
+    \item Time is the most important feature of time series data and is a key attribute that distinguishes it from other data
 \end{itemize}
 
 For example, let us consider the S\&P 500, a stock market index based on the market
@@ -88,32 +88,32 @@ reducing writing and reading latency by an order of magnitude or more.
 If the application is network bound, compressing data means reducing the amount of data to be
 transferred from server to client or the other way around.
 In some IoT applications, the compression can be done at the device level, so that less data
-need to be transferred over the network. This is usually more power efficient, as the energy
+need to be transferred over the network. This is usually more power-efficient, as the energy
 required to compress the data is much less compared to the energy required to transmit it.
 
 \section{Four approaches for time series compression}
 We can identify four different approaches for compressing time series data.
 \begin{enumerate}
-	\item \textbf{Storing aggregates}. In most applications, we are mostly interested in
-	recent data as compared to older data. Thus, older data can be $``$aged out$"$ , that is,
-	stored in aggregates over a longer temporal interval. Consider the previous example of
-	the S\&P Index stock price. Stock prices of the current year can be aggregated over a
-	one-hour interval, while older data can be aggregated over days, weeks, and even months.
-	One problem with this approach is that aggregates remove fluctuations and outliers that
-	are sometimes important when analyzing historical data.
-	\item \textbf{Lossless compression}.\ Time series data is characterized by some properties
-	that can be exploited to obtain good compression ratios.  For example, most of the time
-	data comes at regular intervals, so it does not make sense to store the whole timestamp
-	value for each record, but rather go with a delta encoding approach, that is storing only
-	the difference between sequential timestamps.
-	\item \textbf{Lossy compression. }Many applications are concerned with the trends that
-	can be extracted from time series data, and do not require a high level of accuracy. For
-	this type of applications, lossy compression can be considered, which usually results in
-	much better compression rates as compared to lossless compression.
-	\item \textbf{General-purpose algorithms}. Some time series databases do not offer
-	compression out of the box. In these cases, one can consider running the databases on
-	ZFS or other file systems that offer data compression \cite{A2019TimescaleDB}. Other
-	benchmarks \cite{Danjou2016Timeseries} have indicated that general-purpose algorithms
-	such as LZ4, achieve good compression ratios and may be more desirable to custom solutions
-	given their highly efficient implementations.
+    \item \textbf{Storing aggregates}. In most applications, we are mostly interested in
+    recent data as compared to older data. Thus, older data can be $``$aged out$"$ , that is,
+    stored in aggregates over a longer temporal interval. Consider the previous example of
+    the S\&P Index stock price. Stock prices of the current year can be aggregated over a
+    one-hour interval, while older data can be aggregated over days, weeks, and even months.
+    One problem with this approach is that aggregates remove fluctuations and outliers that
+    are sometimes important when analyzing historical data.
+    \item \textbf{Lossless compression}.\ Time series data is characterized by some properties
+    that can be exploited to obtain good compression ratios.  For example, most of the time
+    data comes at regular intervals, so it does not make sense to store the whole timestamp
+    value for each record, but rather go with a delta encoding approach, that is storing only
+    the difference between sequential timestamps.
+    \item \textbf{Lossy compression. }Many applications are concerned with the trends that
+    can be extracted from time series data, and do not require a high level of accuracy. For
+    this type of applications, lossy compression can be considered, which usually results in
+    much better compression rates as compared to lossless compression.
+    \item \textbf{General-purpose algorithms}. Some time series databases do not offer
+    compression out of the box. In these cases, one can consider running the databases on
+    ZFS or other file systems that offer data compression \cite{A2019TimescaleDB}. Other
+    benchmarks \cite{Danjou2016Timeseries} have indicated that general-purpose algorithms
+    such as LZ4, achieve good compression ratios and may be more desirable to custom solutions
+    given their highly efficient implementations.
 \end{enumerate}
