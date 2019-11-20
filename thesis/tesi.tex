@@ -1,7 +1,7 @@
 %!TEX TS-program = pdflatex
 %!TEX encoding = UTF-8 Unicode
 
-\documentclass[12pt,a4paper,twoside,english, italian]{book}
+\documentclass[12pt,a4paper,twoside,english, italian, nobib]{book}
 
 \usepackage[utf8]{inputenc}
 \usepackage{babel}
@@ -35,7 +35,8 @@
 \setlength{\headheight}{14.5pt}
 
 \usepackage[backend=bibtex,style=ieee]{biblatex}
-\bibliography{bibliography} 
+\addbibresource{bibliography.bib}
+
 
 
   \titolo{Compression in time series \\databases}
@@ -60,7 +61,6 @@
 \renewcommand{\theequation}{\thechapter.\arabic{equation}}%si torna alle formule numerate come da default
 \renewcommand{\thesection}{\thechapter.\arabic{section}}%si torna alle sezioni numerate come da default
 
-
 \input{chapter1}
 \input{chapter2}
 \input{chapter3}
@@ -69,8 +69,10 @@
 \addcontentsline{toc}{chapter}{Conclusions}
 \appendix
 
-\printbibliography
+\backmatter
 
+\printbibliography[nottype=online, heading=subbibliography, title=Bibliography]
+\printbibliography[type=online, heading=subbibliography, title=Sitography]
 
 
 \backmatter
