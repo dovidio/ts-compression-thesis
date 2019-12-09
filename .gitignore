@@ -12,3 +12,4 @@ code/TimeseriesCompressionBenchmarks/.gradle
 code/TimeseriesCompressionBenchmarks/build
 code/scripts/*.env
 data/*
+!data/data.zip
