@@ -36,6 +36,7 @@ cd code/scripts
 node collectDynatraceTimeseries.js
 ```
 8 different metrics will be stored in 8 different files under the data folder.
+Dynatrace data used for this thesis is stored under data/data.zip
 
 ## Collecting "Taxi Data"
 You can find taxi data for January 2019 at the following [link](https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2019-01.csv)
